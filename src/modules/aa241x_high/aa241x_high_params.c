@@ -59,7 +59,6 @@
  * @unit meter 						(the unit attribute (not required, just helps for sanity))
  * @group AA241x High Params		(always include this)
  */
-PARAM_DEFINE_FLOAT(AAH_EXAMPLE, 10.0f);
 
 /**
  * This is an example parameter.  The name of the parameter in QGroundControl
@@ -71,10 +70,34 @@ PARAM_DEFINE_FLOAT(AAH_EXAMPLE, 10.0f);
  * @unit none 						(the unit attribute (not required, just helps for sanity))
  * @group AA241x High Params		(always include this)
  */
-PARAM_DEFINE_FLOAT(AAH_PROPROLLGAIN, 1.0f);
 
 // TODO: define custom parameters here
 
+// Yaw gains
+PARAM_DEFINE_FLOAT(AAH_PROPYAWGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_INTYAWGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_DERIVRAWGAIN, 1.0f);
+
+
+// Roll gains
+PARAM_DEFINE_FLOAT(AAH_PROPROLLGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_INTROLLGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_DERIVROLLGAIN, 1.0f);
+
+// Pith gains
+PARAM_DEFINE_FLOAT(AAH_PROPPITCHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_INTPITCHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_DERIVPITCHGAIN, 1.0f);
+
+// Altitude gains
+PARAM_DEFINE_FLOAT(AAH_PROPALTGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_INTALTGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_DERIVALTGAIN, 1.0f);
+
+// Theta gains
+PARAM_DEFINE_FLOAT(AAH_PROPTHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_INTTHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_DERIVTHGAIN, 1.0f);
 
 int aah_parameters_init(struct aah_param_handles *h)
 {
@@ -86,8 +109,25 @@ int aah_parameters_init(struct aah_param_handles *h)
 	 * NOTE: the string passed to param_find is the same as the name provided
 	 * in the above PARAM_DEFINE_FLOAT
 	 */
-	h->example_high_param		= param_find("AAH_EXAMPLE");
-	h->proportional_roll_gain 	= param_find("AAH_PROPROLLGAIN");
+	h-> proportional_yaw_gain 	= param_find("AAH_PROPYAWGAIN");
+	h-> integrator_yaw_gain 	= param_find("AAH_INTYAWGAIN");
+	h-> derivative_yaw_gain 	= param_find("AAH_DERIVYAWGAIN")
+
+	h-> proportional_roll_gain 	= param_find("AAH_PROPROLLAIN");
+	h-> integrator_roll_gain 	= param_find("AAH_INTROLLGAIN");
+	h-> derivative_roll_gain 	= param_find("AAH_DERIVROLLGAIN")	
+
+	h-> proportional_yaw_gain 	= param_find("AAH_PROPPITCHGAIN");
+	h-> integrator_yaw_gain 	= param_find("AAH_INTPITCHGAIN");
+	h-> derivative_yaw_gain 	= param_find("AAH_DERIVPITCHGAIN");
+
+	h-> proportional_roll_gain 	= param_find("AAH_PROPALTAIN");
+	h-> integrator_roll_gain 	= param_find("AAH_INTALTGAIN");
+	h-> derivative_roll_gain 	= param_find("AAH_DERIVALTGAIN")	
+
+	h-> proportional_yaw_gain 	= param_find("AAH_PROPTHGAIN");
+	h-> integrator_yaw_gain 	= param_find("AAH_INTTHGAIN");
+	h-> derivative_yaw_gain 	= param_find("AAH_DERIVTHGAIN");
 
 	// TODO: add the above line for each of your custom parameters........
 
@@ -99,8 +139,25 @@ int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *
 
 	// for each of your custom parameters, make sure to add this line with
 	// the corresponding variable name
-	param_get(h->example_high_param, &(p->example_high_param));
+	param_get(h->proportional_yaw_gain, &(p->proportional_yaw_gain));
+	param_get(h->integrator_yaw_gain, &(p->integrator_yaw_gain));
+	param_get(h->derivative_yaw_gain, &(p->derivative_yaw_gain));
+
 	param_get(h->proportional_roll_gain, &(p->proportional_roll_gain));
+	param_get(h->integrator_roll_gain, &(p->integrator_roll_gain));
+	param_get(h->derivative_roll_gain, &(p->derivative_roll_gain));
+
+	param_get(h->proportional_pitch_gain, &(p->proportional_pitch_gain));
+	param_get(h->integrator_pitch_gain, &(p->integrator_pitch_gain));
+	param_get(h->derivative_pitch_gain, &(p->derivative_pitch_gain));
+
+	param_get(h->proportional_altitude_gain, &(p->proportional_altitude_gain));
+	param_get(h->integrator_altitude_gain, &(p->integrator_altitude_gain));
+	param_get(h->derivative_altitude_gain, &(p->derivative_altitude_gain));
+
+	param_get(h->proportional_th_gain, &(p->proportional_th_gain));
+	param_get(h->integrator_th_gain, &(p->integrator_th_gain));
+	param_get(h->derivative_th_gain, &(p->derivative_th_gain));
 
 	// TODO: add the above line for each of your custom parameters.....
 

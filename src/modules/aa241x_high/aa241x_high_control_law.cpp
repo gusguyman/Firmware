@@ -1,43 +1,10 @@
-/****************************************************************************
- *
- *   Copyright (c) 2013, 2014 PX4 Development Team. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- * 3. Neither the name PX4 nor the names of its contributors may be
- *    used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- ****************************************************************************/
-
 /*
  * @file aa241x_fw_control.cpp
  *
- * Secondary file to the fixedwing controller containing the
- * control law for the AA241x class.
+ * Implementation of basic control laws (PID) for constant yaw, roll, pitch, and altitude.
+ * Also includes constant heading and constant heading + altitude functions.
  *
- *  @author Adrien Perkins		<adrienp@stanford.edu>
+ *  @author Elise FOURNIER-BIDOZ		<efb@stanford.edu>
  *  @author YOUR NAME			<YOU@EMAIL.COM>
  */
 
@@ -52,6 +19,7 @@ using namespace aa241x_high;
 
 // define global variables (can be seen by all files in aa241x_high directory unless static keyword used)
 float altitude_desired = 0.0f;
+float altitude = 0.0f;
 
 /**
  * Main function in which your code should be written.
@@ -60,54 +28,165 @@ float altitude_desired = 0.0f;
  * feel free to add all the function you'd like, but make sure all
  * the code you'd like executed on a loop is in this function.
  */
-void flight_control() {
 
-	float my_float_variable = 0.0f;		/**< example float variable */
+// // Make a PID yaw stabilizer // //
 
+void constant_yaw(float dt, float yaw_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f) {
 
-	// An example of how to run a one time 'setup' for example to lock one's altitude and heading...
-	if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop, 
-																	 //	should only occur on first engagement since this is 59Hz loop
-		yaw_desired = yaw; 							// yaw_desired already defined in aa241x_high_aux.h
-		altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
-	}
+//    float yaw_desired = 0.0f; // yaw_desired already exists in aa241x_high_aux so no need to repeat float declaration
 
+    float Kp = aah_parameters.proportional_yaw_gain;
+    float Ki = aah_parameters.integrator_yaw_gain;
+    float Kd = aah_parameters.derivative_yaw_gain;
 
-	// TODO: write all of your flight control here...
+    float err = yaw_desired - yaw;
+    float integral  = integral + err;
+    float der  = err - previous_err;
+    previous_err = err;
 
+//    float dt = 1.0 / 60.0;//execution time of loop.
+    float PIDYawCorrection = Kp*err + (Ki*integral*dt) + (Kd*der/dt);
 
-	// getting low data value example
-	// float my_low_data = low_data.field1;
+    // Do bounds checking to keep the yaw correction within the -1..1 limits of the servo output
+    if (PIDYawCorrection > 1.0f) {
+            PIDYawCorrection = 1.0f;
+    } else if (PIDYawCorrection < -1.0f ) {
+            PIDYawCorrection = -1.0f;
+    }
 
-	// setting high data value example
-	high_data.field1 = my_float_variable;
+    // ENSURE THAT YOU SET THE SERVO OUTPUTS!!!
+    // outputs should be set to values between -1..1 (except throttle is 0..1)
+    // where zero is no actuation, and -1,1 are full throw in either the + or - directions
 
-
-	// // Make a really simple proportional roll stabilizer // //
-	//
-	
-	roll_desired = 0.0f; // roll_desired already exists in aa241x_high_aux so no need to repeat float declaration
-
-	// Now use your parameter gain and multiply by the error from desired
-	float proportionalRollCorrection = aah_parameters.proportional_roll_gain * (roll - roll_desired);
-
-	// Note the use of x.0f, this is important to specify that these are single and not double float values!
-
-	// Do bounds checking to keep the roll correction within the -1..1 limits of the servo output
-	if (proportionalRollCorrection > 1.0f) {
-		proportionalRollCorrection = 1.0f;
-	} else if (proportionalRollCorrection < -1.0f ) {
-		proportionalRollCorrection = -1.0f;
-	}
-
-	// ENSURE THAT YOU SET THE SERVO OUTPUTS!!!
-	// outputs should be set to values between -1..1 (except throttle is 0..1)
-	// where zero is no actuation, and -1,1 are full throw in either the + or - directions
-
-	// Set output of roll servo to the control law output calculated above
-	roll_servo_out = proportionalRollCorrection;		
-	// as an example, just passing through manual control to everything but roll
-	pitch_servo_out = -man_pitch_in;
-	yaw_servo_out = man_yaw_in;
-	throttle_servo_out = man_throttle_in;
+    // Set output of roll servo to the control law output calculated above
+    yaw_servo_out = PIDYawCorrection;
+    // as an example, just passing through manual control to everything but roll
+    pitch_servo_out = -man_pitch_in;
+    roll_servo_out = man_roll_in;
+    throttle_servo_out = man_throttle_in;
 }
+
+// // Make a PID roll stabilizer // //
+
+void constant_roll(float dt, float roll_desired = 0.0f, float integral = 0.0f, float previous_err = 0.0f) {
+
+    float Kp = aah_parameters.proportional_roll_gain;
+    float Ki = aah_parameters.integrator_roll_gain;
+    float Kd = aah_parameters.derivative_roll_gain;
+
+    float err = roll_desired - roll;
+    float integral  = integral + new_err;
+    float der  = err - previous_err;
+    previous_err = err;
+
+//    dt = ;
+    float PIDRollCorrection = Kp*err + (Ki*integral*dt) + (Kd*der/dt);
+
+    if (PIDRollCorrection > 1.0f) {
+            PIDRollCorrection = 1.0f;
+    } else if (PIDRollCorrection < -1.0f ) {
+            PIDRollCorrection = -1.0f;
+    }
+
+
+    roll_servo_out = PIDRollCorrection;
+
+    pitch_servo_out = -man_pitch_in;
+    yaw_servo_out = man_yaw_in;
+    throttle_servo_out = man_throttle_in;
+}
+
+// // Make a PID pitch stabilizer // //
+
+void constant_pitch(float dt, float pitch_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f) {
+
+    float Kp = aah_parameters.proportional_pitch_gain;
+    float Ki = aah_parameters.integrator_pitch_gain;
+    float Kd = aah_parameters.derivative_pitch_gain;
+
+    float err = pitch_desired - pitch;
+    float integral  = integral + err;
+    float der  = err - previous_err;
+    previous_err = err;
+
+    float PIDPitchCorrection = Kp*err + (Ki*integral*dt) + (Kd*der/dt);
+
+    if (PIDPitchCorrection > 1.0f) {
+            PIDPitchCorrection = 1.0f;
+    } else if (PIDPitchCorrection < -1.0f ) {
+            PIDPitchCorrection = -1.0f;
+    }
+
+
+    pitch_servo_out = PIDPitchCorrection;
+    roll_servo_out = man_roll_in;
+    yaw_servo_out = man_yaw_in;
+    throttle_servo_out = man_throttle_in;
+}
+
+
+// Constant altitude control law
+// Based on 271A - HW3
+
+
+// Altitude desired has to be defined outside the control law
+
+void constant_altitude(float dt, float previous_int_h = 0.0f, float previous_err_h = 0.0f, float previous_int_th = 0.0f, float previous_err_th = 0.0f, float altitude_desired = 0.0f) {
+
+    float Kp_h = aah_parameters.proportional_altitude_gain;
+    float Ki_h = aah_parameters.integrator_altitude_gain;
+    float Kd_h = aah_parameters.derivative_altitude_gain;
+
+    float Kp_th = aah_parameters.proportional_th_gain;
+    float Ki_th = aah_parameters.integrator_th_gain;
+    float Kd_th = aah_parameters.derivative_th_gain;
+
+
+    // Define integral and derivative of h
+    float err_h = altitude_desired - position_D_baro; // Error in altitude
+    float int_h  = previous_int_h + err_h; //
+    float previous_int_h = int_h;
+
+    float der  = err_h- previous_err_h;
+    float previous_err_h = err_h;
+
+    float th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der/dt);
+
+    // Define integral and derivative of theta
+    float err_th = th_desired - pitch;
+    float int_th  = previous_int_th + err_th;
+    float previous_int_th = int_th;
+
+    der  = err_th - previous_err_th;
+    float previous_err_th = err_th;
+
+    pitch_servo_out = Kp_th*err_th + (Ki_th*int_th*dt) + (Kd_th*der_th/dt)
+
+    roll_servo_out = man_roll_in;
+    yaw_servo_out = man_yaw_in;
+    throttle_servo_out = man_throttle_in;
+
+
+}
+
+// // Make a heading stabilizer // //
+
+void constant_heading(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f) {
+    constant_yaw(dt, yaw_desired);
+    constant_roll(dt, roll_desired);
+}
+
+// // Make an altitude + heading stabilizer // //
+
+void constant_heading_altitude(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f, float altitude_desired = 0.0f) {
+    constant_heading(dt, yaw_desired, roll_desired);
+    constant_altitude(dt, altitude_desired);
+}
+
+
+//void flight_control() {
+//
+//        //CALL THE FUNCTION WE WANT TO EXECUTE, OR DO SEVERAL IF STATEMENTS ACCORDING
+//        // TO WHAT FLIGHT MODE WE'RE IN
+//
+//}

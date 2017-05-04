@@ -184,7 +184,6 @@ void take_picture()
 	pic_request.pos_N = position_N;
 	pic_request.pos_E = position_E;
 	pic_request.pos_D = position_D_gps;
-
 	// publish the picture request
 	if (_picture_request_pub != nullptr) {
 		orb_publish(ORB_ID(aa241x_picture_request), _picture_request_pub, &pic_request);
@@ -197,5 +196,3 @@ void take_picture()
 
 
 }
-
-

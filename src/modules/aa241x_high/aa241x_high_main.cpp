@@ -1007,7 +1007,7 @@ FixedwingControl::task_main()
 
 			if (_vcontrol_mode.flag_control_auto_enabled) {
 
-				
+
 
 				// TODO: potentially add stabilize and other modes back in....
 				/* run the custom control law */
@@ -1029,7 +1029,7 @@ FixedwingControl::task_main()
 				_att_sp.thrust = (isfinite(throttle_desired)) ? throttle_desired : 0.0f;
 
 
-			} else { 
+			} else {
 				// forward through manual values
 			  	roll_servo_out      = man_roll_in;
 			  	pitch_servo_out     = man_pitch_in;
