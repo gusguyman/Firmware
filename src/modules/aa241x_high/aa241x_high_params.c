@@ -51,8 +51,8 @@
 
 /**
  * This is an example parameter.  The name of the parameter in QGroundControl
- * will be C_EXAMPLE and will be in the AAH dropdown.  Make sure to always
- * start your parameters with AAH to have them all in one place.
+ * will be C_EXAMPLE and will be in the C dropdown.  Make sure to always
+ * start your parameters with C to have them all in one place.
  *
  * The default value of this float parameter will be 10.0.
  *
@@ -63,7 +63,7 @@
 /**
  * This is an example parameter.  The name of the parameter in QGroundControl
  * will be C_PROPROLLGAIN and will be in the AAH dropdown.  Make sure to always
- * start your parameters with AAH to have them all in one place.
+ * start your parameters with C to have them all in one place.
  *
  * The default value of this float parameter will be 1.0.
  *
