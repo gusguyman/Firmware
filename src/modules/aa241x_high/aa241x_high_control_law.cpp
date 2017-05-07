@@ -40,7 +40,7 @@ void constant_yaw(float dt, float yaw_desired, float previous_err, float integra
     float Kd = aah_parameters.derivative_yaw_gain;
 
     float err = yaw_desired - yaw;
-    float integral  = integral + err;
+    integral = integral + err;
     float der  = err - previous_err;
     previous_err = err;
 
@@ -75,7 +75,7 @@ void constant_roll(float dt, float roll_desired, float integral, float previous_
     float Kd = aah_parameters.derivative_roll_gain;
 
     float err = roll_desired - roll;
-    float integral  = integral + new_err;
+    integral = integral + new_err;
     float der  = err - previous_err;
     previous_err = err;
 
@@ -105,7 +105,7 @@ void constant_pitch(float dt, float pitch_desired, float previous_err, float int
     float Kd = aah_parameters.derivative_pitch_gain;
 
     float err = pitch_desired - pitch;
-    float integral  = integral + err;
+    integral  = integral + err;
     float der  = err - previous_err;
     previous_err = err;
 
@@ -145,20 +145,20 @@ void constant_altitude(float dt, float previous_int_h, float previous_err_h, flo
     // Define integral and derivative of h
     float err_h = altitude_desired - position_D_baro; // Error in altitude
     float int_h  = previous_int_h + err_h; //
-    float previous_int_h = int_h;
+    previous_int_h = int_h;
 
     float der  = err_h- previous_err_h;
-    float previous_err_h = err_h;
+    previous_err_h = err_h;
 
     float th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der/dt);
 
     // Define integral and derivative of theta
     float err_th = th_desired - pitch;
     float int_th  = previous_int_th + err_th;
-    float previous_int_th = int_th;
+    previous_int_th = int_th;
 
-    der  = err_th - previous_err_th;
-    float previous_err_th = err_th;
+    float der  = err_th - previous_err_th;
+    previous_err_th = err_th;
 
     pitch_servo_out = Kp_th*err_th + (Ki_th*int_th*dt) + (Kd_th*der_th/dt)
 
