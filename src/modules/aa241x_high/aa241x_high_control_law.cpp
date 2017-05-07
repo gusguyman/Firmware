@@ -101,7 +101,7 @@ void constant_roll() {
     }
 
 
-    roll_servo_out = PIDRollCorrection;
+    roll_servo_out = -PIDRollCorrection;
 
     pitch_servo_out = -man_pitch_in;
     yaw_servo_out = man_yaw_in;
