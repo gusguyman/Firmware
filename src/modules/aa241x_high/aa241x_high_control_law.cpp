@@ -31,7 +31,7 @@ float altitude = 0.0f;
 
 // // Make a PID yaw stabilizer // //
 
-void constant_yaw(float dt, float yaw_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f) {
+void constant_yaw(float dt, float yaw_desired, float previous_err, float integral) {
 
 //    float yaw_desired = 0.0f; // yaw_desired already exists in aa241x_high_aux so no need to repeat float declaration
 
@@ -68,7 +68,7 @@ void constant_yaw(float dt, float yaw_desired = 0.0f, float previous_err = 0.0f,
 
 // // Make a PID roll stabilizer // //
 
-void constant_roll(float dt, float roll_desired = 0.0f, float integral = 0.0f, float previous_err = 0.0f) {
+void constant_roll(float dt, float roll_desired, float integral, float previous_err) {
 
     float Kp = aah_parameters.proportional_roll_gain;
     float Ki = aah_parameters.integrator_roll_gain;
@@ -98,7 +98,7 @@ void constant_roll(float dt, float roll_desired = 0.0f, float integral = 0.0f, f
 
 // // Make a PID pitch stabilizer // //
 
-void constant_pitch(float dt, float pitch_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f) {
+void constant_pitch(float dt, float pitch_desired, float previous_err, float integral) {
 
     float Kp = aah_parameters.proportional_pitch_gain;
     float Ki = aah_parameters.integrator_pitch_gain;
@@ -131,7 +131,7 @@ void constant_pitch(float dt, float pitch_desired = 0.0f, float previous_err = 0
 
 // Altitude desired has to be defined outside the control law
 
-void constant_altitude(float dt, float previous_int_h = 0.0f, float previous_err_h = 0.0f, float previous_int_th = 0.0f, float previous_err_th = 0.0f, float altitude_desired = 0.0f) {
+void constant_altitude(float dt, float previous_int_h, float previous_err_h, float previous_int_th, float previous_err_th, float altitude_desired) {
 
     float Kp_h = aah_parameters.proportional_altitude_gain;
     float Ki_h = aah_parameters.integrator_altitude_gain;
@@ -171,14 +171,14 @@ void constant_altitude(float dt, float previous_int_h = 0.0f, float previous_err
 
 // // Make a heading stabilizer // //
 
-void constant_heading(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f) {
+void constant_heading(float dt, float yaw_desired, float roll_desired) {
     constant_yaw(dt, yaw_desired);
     constant_roll(dt, roll_desired);
 }
 
 // // Make an altitude + heading stabilizer // //
 
-void constant_heading_altitude(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f, float altitude_desired = 0.0f) {
+void constant_heading_altitude(float dt, float yaw_desired, float roll_desired, float altitude_desired) {
     constant_heading(dt, yaw_desired, roll_desired);
     constant_altitude(dt, altitude_desired);
 }
