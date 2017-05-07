@@ -75,7 +75,7 @@ void constant_roll(float dt, float roll_desired, float integral, float previous_
     float Kd = aah_parameters.derivative_roll_gain;
 
     float err = roll_desired - roll;
-    integral = integral + new_err;
+    integral = integral + err;
     float der  = err - previous_err;
     previous_err = err;
 
