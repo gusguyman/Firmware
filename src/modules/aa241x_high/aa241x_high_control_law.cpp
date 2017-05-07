@@ -207,8 +207,5 @@ void constant_heading_altitude() {
 
 void flight_control() {
 
-    roll_servo_out = man_roll_in;
-    yaw_servo_out = man_yaw_in;
-    throttle_servo_out = man_throttle_in;
-    pitch_servo_out = man_pitch_in;
+    constant_altitude();
 }
