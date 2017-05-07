@@ -131,7 +131,7 @@ void constant_pitch(float dt, float pitch_desired, float previous_err, float int
 
 // Altitude desired has to be defined outside the control law
 
-void constant_altitude(float dt, float previous_int_h, float previous_err_h, float previous_int_th, float previous_err_th, float altitude_desired) {
+void constant_altitude(float dt, float previous_int_h, float previous_err_h, float previous_int_th, float previous_err_th, float altitude_d) {
 
     float Kp_h = aah_parameters.proportional_altitude_gain;
     float Ki_h = aah_parameters.integrator_altitude_gain;
@@ -143,24 +143,24 @@ void constant_altitude(float dt, float previous_int_h, float previous_err_h, flo
 
 
     // Define integral and derivative of h
-    float err_h = altitude_desired - position_D_baro; // Error in altitude
+    float err_h = altitude_d - position_D_baro; // Error in altitude
     float int_h  = previous_int_h + err_h; //
     previous_int_h = int_h;
 
-    float der  = err_h- previous_err_h;
+    float der_h  = err_h- previous_err_h;
     previous_err_h = err_h;
 
-    float th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der/dt);
+    float th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der_h/dt);
 
     // Define integral and derivative of theta
     float err_th = th_desired - pitch;
     float int_th  = previous_int_th + err_th;
     previous_int_th = int_th;
 
-    float der  = err_th - previous_err_th;
+    float der_th  = err_th - previous_err_th;
     previous_err_th = err_th;
 
-    pitch_servo_out = Kp_th*err_th + (Ki_th*int_th*dt) + (Kd_th*der_th/dt)
+    pitch_servo_out = Kp_th*err_th + (Ki_th*int_th*dt) + (Kd_th*der_th/dt);
 
     roll_servo_out = man_roll_in;
     yaw_servo_out = man_yaw_in;
@@ -178,15 +178,15 @@ void constant_heading(float dt, float yaw_desired, float roll_desired) {
 
 // // Make an altitude + heading stabilizer // //
 
-void constant_heading_altitude(float dt, float yaw_desired, float roll_desired, float altitude_desired) {
+void constant_heading_altitude(float dt, float yaw_desired, float roll_desired, float altitude_d) {
     constant_heading(dt, yaw_desired, roll_desired);
     constant_altitude(dt, altitude_desired);
 }
 
 
-//void flight_control() {
+void flight_control() {
 //
 //        //CALL THE FUNCTION WE WANT TO EXECUTE, OR DO SEVERAL IF STATEMENTS ACCORDING
 //        // TO WHAT FLIGHT MODE WE'RE IN
 //
-//}
+}

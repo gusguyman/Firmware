@@ -74,32 +74,32 @@
 // TODO: define custom parameters here
 
 // Yaw gains
-PARAM_DEFINE_FLOAT(C_PROPYAWGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_INTYAWGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_DERIVRAWGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_P_YAWGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_I_YAWGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_D_YAWGAIN, 1.0f);
 
 
 // Roll gains
-PARAM_DEFINE_FLOAT(C_PROPROLLGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_INTROLLGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_DERROLLGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_P_ROLLGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_I_ROLLGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_D_ROLLGAIN, 1.0f);
 
 // Pith gains
-PARAM_DEFINE_FLOAT(C_PROPPITCHGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_INTPITCHGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_DERIVPITCHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_P_PITCHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_I_PITCHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_D_PITCHGAIN, 1.0f);
 
 // Altitude gains
-PARAM_DEFINE_FLOAT(C_PROPALTGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_INTALTGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_DERIVALTGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_P_ALTGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_I_ALTGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_D_ALTGAIN, 1.0f);
 
 // Theta gains
-PARAM_DEFINE_FLOAT(C_PROPTHGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_INTTHGAIN, 1.0f);
-PARAM_DEFINE_FLOAT(C_DERIVTHGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_P_THGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_I_THGAIN, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_D_THGAIN, 1.0f);
 
-int C_parameters_init(struct C_param_handles *h)
+int aah_parameters_init(struct aah_param_handles *h)
 {
 
 	/* for each of your custom parameters, make sure to define a corresponding
@@ -109,32 +109,32 @@ int C_parameters_init(struct C_param_handles *h)
 	 * NOTE: the string passed to param_find is the same as the name provided
 	 * in the above PARAM_DEFINE_FLOAT
 	 */
-	h-> proportional_yaw_gain 	= param_find("C_PROPYAWGAIN");
-	h-> integrator_yaw_gain 	= param_find("C_INTYAWGAIN");
-	h-> derivative_yaw_gain 	= param_find("C_DERIVYAWGAIN")
+	h-> proportional_yaw_gain 		= param_find("AAH_P_YAWGAIN");
+	h-> integrator_yaw_gain 		= param_find("AAH_I_YAWGAIN");
+	h-> derivative_yaw_gain 		= param_find("AAH_D_YAWGAIN");
 
-	h-> proportional_roll_gain 	= param_find("C_PROPROLLAIN");
-	h-> integrator_roll_gain 	= param_find("C_INTROLLGAIN");
-	h-> derivative_roll_gain 	= param_find("C_DERROLLGAIN")	
+	h-> proportional_roll_gain 		= param_find("AAH_P_ROLLGAIN");
+	h-> integrator_roll_gain 		= param_find("AAH_I_ROLLGAIN");
+	h-> derivative_roll_gain 		= param_find("AAH_D_ROLLGAIN");	
 
-	h-> proportional_yaw_gain 	= param_find("C_PROPPITCHGAIN");
-	h-> integrator_yaw_gain 	= param_find("C_INTPITCHGAIN");
-	h-> derivative_yaw_gain 	= param_find("C_DERIVPITCHGAIN");
+	h-> proportional_pitch_gain		= param_find("AAH_P_PITCHGAIN");
+	h-> integrator_pitch_gain 		= param_find("AAH_I_PITCHGAIN");
+	h-> derivative_pitch_gain 		= param_find("AAH_D_PITCHGAIN");
 
-	h-> proportional_roll_gain 	= param_find("C_PROPALTAIN");
-	h-> integrator_roll_gain 	= param_find("C_INTALTGAIN");
-	h-> derivative_roll_gain 	= param_find("C_DERIVALTGAIN")	
+	h-> proportional_altitude_gain 	= param_find("AAH_P_ALTGAIN");
+	h-> integrator_altitude_gain 	= param_find("AAH_I_ALTGAIN");
+	h-> derivative_altitude_gain 	= param_find("AAH_D_ALTGAIN");	
 
-	h-> proportional_yaw_gain 	= param_find("C_PROPTHGAIN");
-	h-> integrator_yaw_gain 	= param_find("C_INTTHGAIN");
-	h-> derivative_yaw_gain 	= param_find("C_DERIVTHGAIN");
+	h-> proportional_th_gain 		= param_find("AAH_P_THGAIN");
+	h-> integrator_th_gain 			= param_find("AAH_I_THGAIN");
+	h-> derivative_th_gain 			= param_find("AAH_D_THGAIN");
 
 	// TODO: add the above line for each of your custom parameters........
 
 	return OK;
 }
 
-int C_parameters_update(const struct C_param_handles *h, struct C_params *p)
+int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *p)
 {
 
 	// for each of your custom parameters, make sure to add this line with
