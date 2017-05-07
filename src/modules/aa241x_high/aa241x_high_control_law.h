@@ -36,7 +36,7 @@
  *
  * Header file for student's fixedwing control law.
  *
- *  @author Adrien Perkins		<adrienp@stanford.edu>
+ *  @author Elise FOURNIER-BIDOZ		<efb@stanford.edu>
  *  @author YOUR NAME			<YOU@EMAIL.COM>
  */
 #pragma once
@@ -61,6 +61,18 @@
 #include <mathlib/mathlib.h>
 
 // TODO: write your function prototypes here
+
+void constant_yaw(float dt, float yaw_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f);
+
+void constant_roll(float dt, float roll_desired = 0.0f, float integral = 0.0f, float previous_err = 0.0f);
+
+void constant_pitch(float dt, float pitch_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f);
+
+void constant_altitude(float dt, float previous_int_h = 0.0f, float previous_err_h = 0.0f, float previous_int_th = 0.0f, float previous_err_th = 0.0f, float altitude_desired = 0.0f);
+
+void constant_heading(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f);
+
+void constant_heading_altitude(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f, float altitude_desired = 0.0f);
 
 
 
