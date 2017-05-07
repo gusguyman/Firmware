@@ -181,7 +181,7 @@ void constant_altitude() {
         pitch_correction = -1.0f;
     }
 
-    pitch_servo_out = pitch_correction;
+    pitch_servo_out = -pitch_correction;
 
     roll_servo_out = man_roll_in;
     yaw_servo_out = man_yaw_in;
@@ -207,5 +207,5 @@ void constant_heading_altitude() {
 
 void flight_control() {
 
-    constant_altitude();
+    constant_heading();
 }
