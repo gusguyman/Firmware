@@ -62,17 +62,17 @@
 
 // TODO: write your function prototypes here
 
-void constant_yaw(float dt, float yaw_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f);
+void constant_yaw();
 
-void constant_roll(float dt, float roll_desired = 0.0f, float integral = 0.0f, float previous_err = 0.0f);
+void constant_roll();
 
-void constant_pitch(float dt, float pitch_desired = 0.0f, float previous_err = 0.0f, float integral = 0.0f);
+void constant_pitch();
 
-void constant_altitude(float dt, float previous_int_h = 0.0f, float previous_err_h = 0.0f, float previous_int_th = 0.0f, float previous_err_th = 0.0f, float altitude_desired = 0.0f);
+void constant_altitude();
 
-void constant_heading(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f);
+void constant_heading();
 
-void constant_heading_altitude(float dt, float yaw_desired = 0.0f, float roll_desired = 0.0f, float altitude_desired = 0.0f);
+void constant_heading_altitude();
 
 
 
