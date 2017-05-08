@@ -60,6 +60,8 @@ extern "C" {
  */
 struct aah_params {
 
+	// PID Gains
+
         float proportional_yaw_gain;
         float integrator_yaw_gain;
         float derivative_yaw_gain;
@@ -79,6 +81,11 @@ struct aah_params {
         float proportional_th_gain;
         float integrator_th_gain;
         float derivative_th_gain;
+
+        // Variable to define which flight mode we want:
+        // 1: constant altitude
+        // 2: constant heading
+        float flight_mode;
 
 	// TODO: add custom parameter variable names here......
 
@@ -115,6 +122,8 @@ struct aah_param_handles {
         param_t proportional_th_gain;
         param_t integrator_th_gain;
         param_t derivative_th_gain;
+
+        param_t flight mode;
 
 	// TODO: add custom parameter variable names here.......
 
