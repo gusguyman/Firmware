@@ -101,6 +101,8 @@ PARAM_DEFINE_FLOAT(AAH_TH_D, 1.0f);
 
 PARAM_DEFINE_FLOAT(AAH_FLIGHT_MODE, 1.0f);
 
+PARAM_DEFINE_FLOAT(AAH_ALT_DESIRED, 50.0f);
+
 int aah_parameters_init(struct aah_param_handles *h)
 {
 
@@ -133,6 +135,8 @@ int aah_parameters_init(struct aah_param_handles *h)
 
 	h-> flight_mode 				= param_find("AAH_FLIGHT_MODE");
 
+	h-> altitude_desired 			= param_find("AAH_ALT_DESIRED")
+
 	// TODO: add the above line for each of your custom parameters........
 
 	return OK;
@@ -164,6 +168,8 @@ int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *
 	param_get(h->derivative_th_gain, &(p->derivative_th_gain));
 
 	param_get(h->flight_mode, &(p->flight_mode));
+
+	param_get(h->altitude_desired, &(p->altitude_desired));
 
 	// TODO: add the above line for each of your custom parameters.....
 

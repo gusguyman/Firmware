@@ -18,7 +18,6 @@
 using namespace aa241x_high;
 
 // define global variables (can be seen by all files in aa241x_high directory unless static keyword used)
-float altitude_desired = 0.0f;
 float previous_err_yaw = 0.0f;
 float previous_integral_yaw = 0.0f;
 float previous_err_pitch = 0.0f;
@@ -31,7 +30,8 @@ float previous_err_th = 0.0f;
 float previous_integral_th = 0.0f;
 float dt = 1.0/60;
 
-float flight_mode = aah.aah_parameters.flight_mode; 
+float flight_mode = aah_parameters.flight_mode; 
+float altitude_desired = aah_parameters.altitude_desired; 
 
 /**
  * Main function in which your code should be written.

@@ -87,6 +87,9 @@ struct aah_params {
         // 2: constant heading
         float flight_mode;
 
+        // Altitude desired
+        float altitude_desired;
+
 	// TODO: add custom parameter variable names here......
 
 };
@@ -124,6 +127,8 @@ struct aah_param_handles {
         param_t derivative_th_gain;
 
         param_t flight mode;
+
+        param_t altitude_desired;
 
 	// TODO: add custom parameter variable names here.......
 
