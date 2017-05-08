@@ -30,7 +30,7 @@ float previous_err_th = 0.0f;
 float previous_integral_th = 0.0f;
 float dt = 1.0/60;
 
-float flight_mode = aah_parameters.flight_mode; 
+int flight_mode = aah_parameters.flight_mode; 
 float altitude_desired = aah_parameters.altitude_desired; 
 
 /**
@@ -209,9 +209,9 @@ void constant_heading_altitude() {
 
 void flight_control() {
 
-    if (flight_mode == 1.0f){
+    if (flight_mode == 1){
         constant_altitude();
-    } else if (flight_mode == 2.0f){
+    } else if (flight_mode == 2){
         constant_heading();
     } 
 }

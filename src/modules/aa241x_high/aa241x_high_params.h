@@ -126,7 +126,7 @@ struct aah_param_handles {
         param_t integrator_th_gain;
         param_t derivative_th_gain;
 
-        param_t flight mode;
+        param_t flight_mode;
 
         param_t altitude_desired;
 
