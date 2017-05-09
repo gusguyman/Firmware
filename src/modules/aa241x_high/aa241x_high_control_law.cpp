@@ -209,9 +209,6 @@ void constant_heading_altitude() {
 
 void flight_control() {
 
-    if (flight_mode == 1){
-        constant_altitude();
-    } else if (flight_mode == 2){
-        constant_heading();
-    } 
+	constant_altitude();
+
 }
