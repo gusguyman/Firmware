@@ -5,6 +5,7 @@
  * Also includes constant heading and constant heading + altitude functions.
  *
  *  @author Elise FOURNIER-BIDOZ		<efb@stanford.edu>
+ *  @author Alexandre EL ASSAD          <aelassad@stanford.edu>
  *  @author YOUR NAME			<YOU@EMAIL.COM>
  */
 
