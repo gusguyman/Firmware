@@ -31,8 +31,8 @@ float previous_err_th = 0.0f;
 float previous_integral_th = 0.0f;
 float dt = 1.0/60;
 
-int flight_mode = aah_parameters.flight_mode; 
-float altitude_desired = aah_parameters.altitude_desired; 
+int flight_mode = aah_parameters.flight_mode;
+float altitude_desired = aah_parameters.altitude_desired;
 
 /**
  * Main function in which your code should be written.
@@ -167,6 +167,11 @@ void constant_altitude() {
     previous_err_h = err_h;
 
     float th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der_h/dt);
+    if (th_desired > 0.785f){
+        th_desired = 0.785f;
+    } else if (th_desired < -0.785f){
+        th_desired = -0.785f;
+    }
 
     // Define integral and derivative of theta
     float err_th = th_desired - pitch;
