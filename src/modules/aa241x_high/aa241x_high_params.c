@@ -99,7 +99,7 @@ PARAM_DEFINE_FLOAT(AAH_TH_P, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_TH_I, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_TH_D, 1.0f);
 
-PARAM_DEFINE_FLOAT(AAH_FLIGHT_MODE, 1);
+PARAM_DEFINE_INT32(AAH_FLIGHT_MODE, 0);
 
 PARAM_DEFINE_FLOAT(AAH_ALT_DESIRED, 50.0f);
 
@@ -133,7 +133,7 @@ int aah_parameters_init(struct aah_param_handles *h)
 	h-> integrator_th_gain 			= param_find("AAH_TH_I");
 	h-> derivative_th_gain 			= param_find("AAH_TH_D");
 
-	h-> flight_mode 				= param_find("AAH_FLIGHT_MODE");
+	h-> flight_mode 			= param_find("AAH_FLIGHT_MODE");
 
 	h-> altitude_desired 			= param_find("AAH_ALT_DESIRED");
 

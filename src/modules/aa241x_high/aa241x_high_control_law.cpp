@@ -216,6 +216,22 @@ void constant_heading_altitude() {
 
 void flight_control() {
 
-	constant_altitude();
+    if (flight_mode == 0){
+        constant_altitude();
+
+    } else if (flight_mode == 1){
+        constant_heading();
+
+    } else if (flight_mode == 2){
+        constant_pitch();
+
+    } else if (flight_mode == 3){
+        constant_roll();
+
+    } else if (flight_mode == 4){
+        constant_yaw();
+
+    }
+
 
 }

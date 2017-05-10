@@ -83,9 +83,13 @@ struct aah_params {
         float derivative_th_gain;
 
         // Variable to define which flight mode we want:
-        // 1: constant altitude
-        // 2: constant heading
-        float flight_mode;
+        // 0: constant altitude
+        // 1: constant heading
+        // 2: constant pitch
+        // 3: constant roll
+        // 4: constant yaw
+ 
+        int flight_mode;
 
         // Altitude desired
         float altitude_desired;
