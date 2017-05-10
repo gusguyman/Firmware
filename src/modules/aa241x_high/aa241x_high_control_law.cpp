@@ -166,7 +166,8 @@ void constant_altitude() {
     float der_h  = err_h- previous_err_h;
     previous_err_h = err_h;
 
-    float th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der_h/dt);
+
+    th_desired = Kp_h*err_h + (Ki_h*int_h*dt) + (Kd_h*der_h/dt);
     if (th_desired > 0.785f){
         th_desired = 0.785f;
     } else if (th_desired < -0.785f){

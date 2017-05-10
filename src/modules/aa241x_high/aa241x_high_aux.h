@@ -56,6 +56,9 @@
 // wrap everything into a namespace for allowing for common variable names
 namespace aa241x_high {
 
+//Declaring variables for logging from our controllers - Mark
+extern float th_desired;
+
 // set these variables for help in debugging (these will be sent to the ground station)
 extern float roll_desired;
 extern float pitch_desired;

@@ -60,6 +60,8 @@
 #include <systemlib/systemlib.h>
 #include <mathlib/mathlib.h>
 
+#include "aa241x_high_aux.h"
+
 // TODO: write your function prototypes here
 
 void constant_yaw();

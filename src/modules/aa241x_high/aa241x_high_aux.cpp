@@ -51,6 +51,8 @@
 // need to use a specific namespace
 namespace aa241x_high {
 
+float th_desired = 0.0f;
+
 // set these variables for help in debugging (these will be sent to the ground station)
 float roll_desired = 0.0f;
 float pitch_desired = 0.0f;

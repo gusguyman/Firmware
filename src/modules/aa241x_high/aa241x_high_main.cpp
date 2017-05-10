@@ -644,6 +644,10 @@ FixedwingControl::low_data_poll()
 void
 FixedwingControl::publish_high_data()
 {
+
+    aa241x_high_data_s high_data;
+    high_data.field1 = th_desired;
+
 	/* publish the high priority loop data */
 	if (_high_data_pub != nullptr) {
 		orb_publish(ORB_ID(aa241x_high_data), _high_data_pub, &high_data);
