@@ -37,7 +37,7 @@
  * Definition of custom parameters for fixedwing controllers
  * being written for AA241x.
  *
- *  @author Adrien Perkins		<adrienp@stanford.edu>
+ *  @author Adrien Perkins		<adrienp@stanford.edu>/home/aa274/aa241x_firmware/Firmware/src/modules/aa241x_high/home/aa274/aa241x_firmware/Firmware/src/modules/aa241x_high
  */
 #pragma once
 
@@ -88,7 +88,7 @@ struct aah_params {
         // 2: constant pitch
         // 3: constant roll
         // 4: constant yaw
- 
+
         int flight_mode;
 
         // Altitude desired
@@ -149,7 +149,7 @@ int aah_parameters_init(struct aah_param_handles *h);
  *
  */
 
-        
+
 int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *p);
 
 #ifdef __cplusplus

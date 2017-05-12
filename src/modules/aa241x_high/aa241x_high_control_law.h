@@ -61,6 +61,7 @@
 #include <mathlib/mathlib.h>
 
 #include "aa241x_high_aux.h"
+#include "MazController.h"
 
 // TODO: write your function prototypes here
 
@@ -76,6 +77,10 @@ void constant_heading();
 
 void constant_heading_altitude();
 
-
+void UpdateInputs(in_state_s & in_roll, \
+                  in_state_s & in_pitch, \
+                  in_state_s & in_yaw, \
+                  in_state_s & in_alt \
+                  );
 
 #endif /* AA241X_FW_CONTROL_MAIN_H_ */
