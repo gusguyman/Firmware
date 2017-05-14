@@ -1,6 +1,7 @@
 #include "MazController.h"
 #include "aa241x_high_control_law.h"
 #include "aa241x_high_aux.h"
+#include <cstdlib>
 
 
 MazController::MazController()
@@ -46,8 +47,14 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 3: //const Alt
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
+        float current;
+        if (abs(in_alt.desired - in_alt.current) < 1.00) {
+            current = in_alt.desired;
+        } else {
+            current = in_alt.current;
+        }
         _Alt.SetDesired(in_alt.desired);
-        _Alt.SetCurrentValue(in_alt.current);
+        _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
         _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
         _Pitch.SetDesired(_Alt.GetOutput());

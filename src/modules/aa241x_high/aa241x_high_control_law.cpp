@@ -51,6 +51,9 @@ void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_yaw, \
                   in_state_s & in_alt \
                   ) {
+//Update Parameter stuff
+    flight_mode = aah_parameters.flight_mode;
+    altitude_desired = aah_parameters.altitude_desired;
 
     in_roll.kp = aah_parameters.proportional_roll_gain;
     in_roll.kd = aah_parameters.derivative_roll_gain;
