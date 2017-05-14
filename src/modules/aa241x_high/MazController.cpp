@@ -46,7 +46,13 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         r_outputs.yaw = _Yaw.GetOutput();
         break;
     case 3: //const Alt
+        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
+        _Roll.SetDesired(in_roll.desired);
+        _Roll.SetCurrentValue(in_roll.current);
+        _Roll.PID_Update();
+        r_outputs.roll = _Roll.GetOutput();
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
+        _Alt.SetBounds(-0.5f, 0.5f);
         float current;
         if (abs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
