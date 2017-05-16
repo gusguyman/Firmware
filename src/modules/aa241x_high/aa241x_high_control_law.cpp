@@ -33,6 +33,8 @@ float dt = 1.0/60;
 
 int flight_mode = aah_parameters.flight_mode;
 float altitude_desired = aah_parameters.altitude_desired;
+float grndspeed_desired = 0.0f;
+float heading_desired = 0.0f;
 
 /**
  * Main function in which your code should be written.
@@ -45,11 +47,13 @@ in_state_s roll_s;
 in_state_s pitch_s;
 in_state_s yaw_s;
 in_state_s alt_s;
+in_state_s heading_s;
 
 void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_pitch, \
                   in_state_s & in_yaw, \
-                  in_state_s & in_alt \
+                  in_state_s & in_alt, \
+                  in_state_s & in_heading \
                   ) {
 //Update Parameter stuff
     flight_mode = aah_parameters.flight_mode;
@@ -59,25 +63,31 @@ void UpdateInputs(in_state_s & in_roll, \
     in_roll.kd = aah_parameters.derivative_roll_gain;
     in_roll.ki = aah_parameters.integrator_roll_gain;
     in_roll.current = roll;
-    in_roll.desired = 0.0f;
+    in_roll.desired = roll_desired;
 
     in_pitch.kp = aah_parameters.proportional_pitch_gain;
     in_pitch.kd = aah_parameters.derivative_pitch_gain;
     in_pitch.ki = aah_parameters.integrator_pitch_gain;
     in_pitch.current = pitch;
-    in_pitch.desired = 0.0f;
+    in_pitch.desired = pitch_desired;
 
     in_yaw.kp = aah_parameters.proportional_yaw_gain;
     in_yaw.kd = aah_parameters.derivative_yaw_gain;
     in_yaw.ki = aah_parameters.integrator_yaw_gain;
     in_yaw.current = yaw;
-    in_yaw.desired = 0.0f;
+    in_yaw.desired = yaw_desired;
 
     in_alt.kp = aah_parameters.proportional_altitude_gain;
     in_alt.kd = aah_parameters.derivative_altitude_gain;
     in_alt.ki = aah_parameters.integrator_altitude_gain;
     in_alt.current = position_D_baro;
     in_alt.desired = altitude_desired;
+
+    in_heading.kp = aah_parameters.proportional_altitude_gain;
+    in_heading.kd = aah_parameters.derivative_altitude_gain;
+    in_heading.ki = aah_parameters.integrator_altitude_gain;
+    in_heading.current = ground_course;
+    in_heading.desired = heading_desired;
 }
 
 MazController mazController;
@@ -85,7 +95,11 @@ MazController mazController;
 void flight_control() {
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
                                                                  //	should only occur on first engagement since this is 59Hz loop
-//    yaw_desired = yaw; 							// yaw_desired already defined in aa241x_high_aux.h
+        yaw_desired = yaw;
+        roll_desired = roll;
+        pitch_desired = pitch;
+        heading_desired = ground_course;
+         							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
 	}
 
@@ -96,13 +110,14 @@ void flight_control() {
 	outputs.yaw = man_yaw_in;
 	outputs.throttle = man_throttle_in;
 
-	UpdateInputs(roll_s, pitch_s, yaw_s, alt_s);
+	UpdateInputs(roll_s, pitch_s, yaw_s, alt_s, heading_s);
 
     mazController.Controller(flight_mode, outputs, \
                              roll_s, \
                              pitch_s, \
                              yaw_s, \
-                             alt_s \
+                             alt_s, \
+                             heading_s
                              );
 
     yaw_servo_out = outputs.yaw;

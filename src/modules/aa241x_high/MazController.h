@@ -39,6 +39,9 @@ class MazController
         principal_axis_c& GetRoll() {return _Roll;}
         principal_axis_c& GetThrottle() {return _Throttle;}
 
+        float Find_perp_distance(in_state_s in_ground_course);
+        void SetPos(float in_cur_N, float in_cur_E);
+
 
     private:
         principal_axis_c _Yaw;
@@ -46,6 +49,13 @@ class MazController
         principal_axis_c _Roll;
         principal_axis_c _Throttle;
         principal_axis_c _Alt;
+        principal_axis_c _Heading;
+        float _prev_N;
+        float _prev_E;
+        float _prev_goal_N;
+        float _prev_goal_E;
+        float _cur_N;
+        float _cur_E;
 };
 
 #endif // MAZCONTROLLER_H
