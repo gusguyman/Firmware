@@ -34,7 +34,7 @@ float dt = 1.0/60;
 int flight_mode = aah_parameters.flight_mode;
 float velocity_desired = 0.0f;
 float altitude_desired = aah_parameters.altitude_desired;
-float grndspeed_desired = 0.0f; //typo ?????
+float grndspeed_desired = 0.0f; 
 float heading_desired = 0.0f;
 
 /**

@@ -25,7 +25,6 @@ float roll_desired = 0.0f;
 float pitch_desired = 0.0f;
 float yaw_desired = 0.0f;
 float throttle_desired = 0.0f;
-float velocity_desired = 0.0f;
 
 
 // Tait-Bryan Euler angles in radian
