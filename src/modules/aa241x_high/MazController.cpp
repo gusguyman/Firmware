@@ -94,6 +94,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
         break;
     case 1: // Constant Pitch
         _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
@@ -102,6 +103,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Pitch.SetCurrentValue(in_pitch.current);
         _Pitch.PID_Update();
         r_outputs.pitch = _Pitch.GetOutput();
+        _data_to_log.field3 = in_pitch.desired;
         break;
     case 2: // Constant Yaw
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
@@ -110,19 +112,22 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
+        _data_to_log.field4 = in_yaw.desired;
         break;
-    case 3: //const Alt      
+    case 3: //const Alt
         _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
         _Roll.SetDesired(in_roll.desired);
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
         _Vel.SetDesired(in_vel.desired);
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.PID_Update();
         r_outputs.vel = _Vel.GetOutput();
+        _data_to_log.field5 = in_vel.desired;
 
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
@@ -135,14 +140,15 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetDesired(in_alt.desired);
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
-        
+
         _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
         _Pitch.SetDesired(_Alt.GetOutput());
         _Pitch.SetCurrentValue(in_pitch.current);
         _Pitch.PID_Update();
         r_outputs.pitch = _Pitch.GetOutput();
+        _data_to_log.field3 = in_pitch.desired;
 
-        _data_to_log.field5 = in_roll.desired;
+        _data_to_log.field2 = in_roll.desired;
         _data_to_log.field6 = in_alt.desired;
         _data_to_log.field7 = _Alt.GetOutput();
 
@@ -164,9 +170,10 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
 
         _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
-        _data_to_log.field9 = in_yaw.desired;
+
         _data_to_log.field10 = in_heading.desired;
         _data_to_log.field11 = _prev_goal_N;
         _data_to_log.field12 = _prev_goal_E;
@@ -179,18 +186,27 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Heading.SetCurrentValue(Find_perp_distance(in_heading));
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
+        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
+
+        _data_to_log.field10 = in_heading.desired;
+        _data_to_log.field11 = _prev_goal_N;
+        _data_to_log.field12 = _prev_goal_E;
+        _data_to_log.field13 = _prev_N;
+        _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
         _Yaw.SetDesired(_Heading.GetOutput() + (in_yaw.desired - in_heading.desired));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
+        _data_to_log.field4 = in_yaw.desired;
 
         _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
         _Roll.SetDesired(in_roll.desired);
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
 
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
@@ -208,25 +224,92 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Pitch.SetCurrentValue(in_pitch.current);
         _Pitch.PID_Update();
         r_outputs.pitch = _Pitch.GetOutput();
+        _data_to_log.field3 = in_pitch.desired;
+        _data_to_log.field6 = in_alt.desired;
+        _data_to_log.field7 = _Alt.GetOutput();
         break;
     case 6: //Follow a line according to Rock's method, with no altitude hold
         _Heading.SetDesired(0.0f); //Want no perp distance to line
         _Heading.SetCurrentValue(Find_perp_distance(in_heading));
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
+        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
+
+        _data_to_log.field10 = in_heading.desired;
+        _data_to_log.field11 = _prev_goal_N;
+        _data_to_log.field12 = _prev_goal_E;
+        _data_to_log.field13 = _prev_N;
+        _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
         _Yaw.SetDesired(_Heading.GetOutput()); //+ (in_yaw.desired - in_heading.desired));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
+        _data_to_log.field4 = in_yaw.desired;
 
         _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
         _Roll.SetDesired(_Yaw.GetOutput());
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
         break;
+
+    case 7:
+        _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
+        _Vel.SetDesired(in_vel.desired);
+        _Vel.SetCurrentValue(in_vel.current);
+        _Vel.PID_Update();
+        r_outputs.vel = _Vel.GetOutput();
+        _data_to_log.field5 = in_vel.desired;
+
+        _Heading.SetDesired(0.0f); //Want no perp distance to line
+        _Heading.SetCurrentValue(Find_perp_distance(in_heading));
+        _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
+        _Heading.PID_Update();
+        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
+
+        _data_to_log.field10 = in_heading.desired;
+        _data_to_log.field11 = _prev_goal_N;
+        _data_to_log.field12 = _prev_goal_E;
+        _data_to_log.field13 = _prev_N;
+        _data_to_log.field14 = _prev_E;
+
+        _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
+        _Yaw.SetDesired(_Heading.GetOutput() + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetCurrentValue(in_yaw.current);
+        _Yaw.PID_Update();
+        r_outputs.yaw = _Yaw.GetOutput();
+        _data_to_log.field4 = in_yaw.desired;
+
+        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
+        _Roll.SetDesired(in_roll.desired);
+        _Roll.SetCurrentValue(in_roll.current);
+        _Roll.PID_Update();
+        r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
+
+        _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
+        _Alt.SetBounds(-0.5f, 0.5f);
+        float current;
+        if (abs(in_alt.desired - in_alt.current) < 1.00) {
+            current = in_alt.desired;
+        } else {
+            current = in_alt.current;
+        }
+        _Alt.SetDesired(in_alt.desired);
+        _Alt.SetCurrentValue(current);
+        _Alt.PID_Update();
+        _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
+        _Pitch.SetDesired(_Alt.GetOutput());
+        _Pitch.SetCurrentValue(in_pitch.current);
+        _Pitch.PID_Update();
+        r_outputs.pitch = _Pitch.GetOutput();
+        _data_to_log.field3 = in_pitch.desired;
+        _data_to_log.field6 = in_alt.desired;
+        _data_to_log.field7 = _Alt.GetOutput();
+
     default:
         //Do nothing, return all manual inputs
         break;
