@@ -32,8 +32,9 @@ float previous_integral_th = 0.0f;
 float dt = 1.0/60;
 
 int flight_mode = aah_parameters.flight_mode;
+float velocity_desired = 0.0f;
 float altitude_desired = aah_parameters.altitude_desired;
-float grndspeed_desired = 0.0f;
+float grndspeed_desired = 0.0f; //typo ?????
 float heading_desired = 0.0f;
 
 /**
@@ -46,6 +47,7 @@ float heading_desired = 0.0f;
 in_state_s roll_s;
 in_state_s pitch_s;
 in_state_s yaw_s;
+in_state_s vel_s;
 in_state_s alt_s;
 in_state_s heading_s;
 
@@ -53,6 +55,7 @@ in_state_s heading_s;
 void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_pitch, \
                   in_state_s & in_yaw, \
+                  in_state_s & in_vel, \
                   in_state_s & in_alt, \
                   in_state_s & in_heading \
                   ) {
@@ -78,6 +81,12 @@ void UpdateInputs(in_state_s & in_roll, \
     in_yaw.current = yaw;
     in_yaw.desired = yaw_desired;
 
+    in_vel.kp = aah_parameters.proportional_velocity_gain;
+    in_vel.kd = aah_parameters.derivative_velocity_gain;
+    in_vel.ki = aah_parameters.integrator_velocity_gain;
+    in_vel.current = speed_body_u;
+    in_vel.desired = velocity_desired;
+
     in_alt.kp = aah_parameters.proportional_altitude_gain;
     in_alt.kd = aah_parameters.derivative_altitude_gain;
     in_alt.ki = aah_parameters.integrator_altitude_gain;
@@ -100,6 +109,7 @@ void flight_control() {
         yaw_desired = yaw;
         roll_desired = roll;
         pitch_desired = pitch;
+        velocity_desired = speed_body_u;
         heading_desired = ground_course;
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
@@ -112,12 +122,13 @@ void flight_control() {
 	outputs.yaw = man_yaw_in;
 	outputs.throttle = man_throttle_in;
 
-	UpdateInputs(roll_s, pitch_s, yaw_s, alt_s, heading_s);
+	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s);
 
     mazController.Controller(flight_mode, outputs, \
                              roll_s, \
                              pitch_s, \
                              yaw_s, \
+                             vel_s, \
                              alt_s, \
                              heading_s
                              );

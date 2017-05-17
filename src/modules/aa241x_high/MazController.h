@@ -50,6 +50,7 @@ class MazController
                          const in_state_s & in_roll, \
                          const in_state_s & in_pitch, \
                          const in_state_s & in_yaw, \
+                         const in_state_s & in_vel, \
                          const in_state_s & in_alt, \
                          const in_state_s & in_heading \
                          );
@@ -58,6 +59,7 @@ class MazController
         principal_axis_c& GetPitch() {return _Pitch;}
         principal_axis_c& GetRoll() {return _Roll;}
         principal_axis_c& GetThrottle() {return _Throttle;}
+        principal_axis_c& GetVelocity() {return _Vel;}
 
         float Find_perp_distance(const in_state_s & in_ground_course);
         void SetPos(float in_cur_N, float in_cur_E);
@@ -69,6 +71,7 @@ class MazController
         principal_axis_c _Pitch;
         principal_axis_c _Roll;
         principal_axis_c _Throttle;
+        principal_axis_c _Vel;
         principal_axis_c _Alt;
         principal_axis_c _Heading;
         float _prev_N;
