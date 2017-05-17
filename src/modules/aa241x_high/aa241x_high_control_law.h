@@ -80,7 +80,8 @@ void constant_heading_altitude();
 void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_pitch, \
                   in_state_s & in_yaw, \
-                  in_state_s & in_alt \
+                  in_state_s & in_alt, \
+                  in_state_s & in_heading \
                   );
 
 #endif /* AA241X_FW_CONTROL_MAIN_H_ */

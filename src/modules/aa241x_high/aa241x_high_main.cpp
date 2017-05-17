@@ -646,7 +646,22 @@ FixedwingControl::publish_high_data()
 {
 
     aa241x_high_data_s high_data;
-    high_data.field1 = th_desired;
+    high_data.field1 = data_to_log.field1;
+    high_data.field2 = data_to_log.field2;
+    high_data.field3 = data_to_log.field3;
+    high_data.field4 = data_to_log.field4;
+    high_data.field5 = data_to_log.field5;
+    high_data.field6 = data_to_log.field6;
+    high_data.field7 = data_to_log.field7;
+    high_data.field8 = data_to_log.field8;
+    high_data.field9 = data_to_log.field9;
+    high_data.field10 = data_to_log.field10;
+    high_data.field11 = data_to_log.field11;
+    high_data.field12 = data_to_log.field12;
+    high_data.field13 = data_to_log.field13;
+    high_data.field14 = data_to_log.field14;
+    high_data.field15 = data_to_log.field15;
+    high_data.field16 = data_to_log.field16;
 
 	/* publish the high priority loop data */
 	if (_high_data_pub != nullptr) {

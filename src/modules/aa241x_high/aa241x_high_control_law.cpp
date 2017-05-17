@@ -49,6 +49,7 @@ in_state_s yaw_s;
 in_state_s alt_s;
 in_state_s heading_s;
 
+
 void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_pitch, \
                   in_state_s & in_yaw, \
@@ -91,6 +92,7 @@ void UpdateInputs(in_state_s & in_roll, \
 }
 
 MazController mazController;
+mazController.GetLogData(data_to_log);
 
 void flight_control() {
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
@@ -119,6 +121,8 @@ void flight_control() {
                              alt_s, \
                              heading_s
                              );
+
+    mazController.GetLogData(data_to_log);
 
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
