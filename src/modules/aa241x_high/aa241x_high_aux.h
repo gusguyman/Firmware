@@ -19,6 +19,7 @@
 #include <uORB/topics/aa241x_high_data.h>
 
 #include "aa241x_high_params.h"
+#include "MazController.h"
 
 // wrap everything into a namespace for allowing for common variable names
 namespace aa241x_high {
