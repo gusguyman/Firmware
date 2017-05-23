@@ -33,6 +33,7 @@ extern float roll_desired;
 extern float pitch_desired;
 extern float yaw_desired;
 extern float throttle_desired;
+extern float rollForHeading_desired;
 
 
 // Tait-Bryan Euler angles in radian

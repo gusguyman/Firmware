@@ -57,6 +57,10 @@ struct aah_params {
         float integrator_velocity_gain;
         float derivative_velocity_gain;
 
+        float proportional_rollForHeading_gain;
+        float integrator_rollForHeading_gain;
+        float derivative_rollForHeading_gain;
+
         // Variable to define which flight mode we want:
         // 0: constant altitude
         // 1: constant heading
@@ -68,6 +72,8 @@ struct aah_params {
 
         // Altitude desired
         float altitude_desired;
+
+        float rollForHeading_desired;
 
 	// TODO: add custom parameter variable names here......
 
@@ -112,6 +118,12 @@ struct aah_param_handles {
         param_t proportional_velocity_gain;
         param_t integrator_velocity_gain;
         param_t derivative_velocity_gain;
+
+        param_t proportional_rollForHeading_gain;
+        param_t integrator_rollForHeading_gain;
+        param_t derivative_rollForHeading_gain;
+
+        param_t rollForHeading_desired;
 
         param_t flight_mode;
 

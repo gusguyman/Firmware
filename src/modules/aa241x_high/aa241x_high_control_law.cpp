@@ -19,6 +19,8 @@
 using namespace aa241x_high;
 
 // define global variables (can be seen by all files in aa241x_high directory unless static keyword used)
+
+//SHOULD WE DEFINE THESE FOR ROLL-FOR-HEADING ?
 float previous_err_yaw = 0.0f;
 float previous_integral_yaw = 0.0f;
 float previous_err_pitch = 0.0f;
@@ -50,6 +52,7 @@ in_state_s yaw_s;
 in_state_s vel_s;
 in_state_s alt_s;
 in_state_s heading_s;
+in_state_s rollForHeading_s;
 
 logger_s data_to_log;
 
@@ -59,7 +62,8 @@ void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_yaw, \
                   in_state_s & in_vel, \
                   in_state_s & in_alt, \
-                  in_state_s & in_heading \
+                  in_state_s & in_heading, \
+                  in_state_s & in_rollForHeading \
                   ) {
 //Update Parameter stuff
     flight_mode = aah_parameters.flight_mode;
@@ -99,6 +103,12 @@ void UpdateInputs(in_state_s & in_roll, \
     in_heading.ki = aah_parameters.integrator_heading_gain;
     in_heading.current = ground_course;
     in_heading.desired = heading_desired;
+
+    in_rollForHeading.kp = aah_parameters.proportional_rollForHeading_gain;
+    in_rollForHeading.kd = aah_parameters.derivative_rollForHeading_gain;
+    in_rollForHeading.ki = aah_parameters.integrator_rollForHeading_gain;
+    in_rollForHeading.current = roll;
+    in_rollForHeading.desired = rollForHeading_desired;
 }
 
 MazController mazController;
@@ -113,6 +123,7 @@ void flight_control() {
         velocity_desired = speed_body_u;
         heading_desired = ground_course;
         altitude_desired = position_D_baro;
+        rollForHeading_desired = roll;
         mazController.SetPos(position_N, position_E);
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
@@ -124,8 +135,9 @@ void flight_control() {
 	outputs.roll = man_roll_in;
 	outputs.yaw = man_yaw_in;
 	outputs.throttle = man_throttle_in;
+  outputs.rollForHeading = man_roll_in;
 
-	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s);
+	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
 
     mazController.Controller(flight_mode, outputs, \
                              roll_s, \
@@ -133,7 +145,8 @@ void flight_control() {
                              yaw_s, \
                              vel_s, \
                              alt_s, \
-                             heading_s
+                             heading_s,\
+                             rollForHeading_s \
                              );
 
     mazController.GetLogData(data_to_log);

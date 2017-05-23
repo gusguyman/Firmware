@@ -8,6 +8,7 @@ struct output_s {
     float pitch;
     float yaw;
     float throttle;
+    float rollForHeading;
 };
 
 
@@ -52,7 +53,8 @@ class MazController
                          const in_state_s & in_yaw, \
                          const in_state_s & in_vel, \
                          const in_state_s & in_alt, \
-                         const in_state_s & in_heading \
+                         const in_state_s & in_heading, \
+                         const in_state_s & in_rollForHeading \
                          );
 
         principal_axis_c& GetYaw() {return _Yaw;}

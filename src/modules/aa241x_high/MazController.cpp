@@ -86,7 +86,8 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
                          const in_state_s & in_yaw, \
                          const in_state_s & in_vel, \
                          const in_state_s & in_alt, \
-                         const in_state_s & in_heading \
+                         const in_state_s & in_heading, \
+                         const in_state_s & in_rollForHeading \
                          ) {
     _data_to_log.field1 = float(flight_mode);
     float current;
@@ -236,7 +237,8 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field6 = in_alt.desired;
         _data_to_log.field7 = _Alt.GetOutput();
         break;
-    case 6: //Follow a line according to Rock's method, with no altitude hold
+    case 6: //Follow a line according to Rock's method, with altitude hold and constant velocity
+        
         _Heading.SetDesired(0.0f); //Want no perp distance to line
         _Heading.SetCurrentValue(Find_perp_distance(in_heading));
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
@@ -256,15 +258,36 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         r_outputs.yaw = _Yaw.GetOutput();
         _data_to_log.field4 = in_yaw.desired;
 
-        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
+        _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
         _Roll.SetDesired(_Yaw.GetOutput());
-        _Roll.SetCurrentValue(in_roll.current);
+        _Roll.SetCurrentValue(in_rollForHeading.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
-        _data_to_log.field2 = in_roll.desired;
-        break;
+        _data_to_log.field2 = in_rollForHeading.desired;
 
-    case 7:
+        
+        _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
+        _Alt.SetBounds(-0.5f, 0.5f);
+
+        if (abs(in_alt.desired - in_alt.current) < 1.00) {
+            current = in_alt.desired;
+        } else {
+            current = in_alt.current;
+        }
+        _Alt.SetDesired(in_alt.desired);
+        _Alt.SetCurrentValue(current);
+        _Alt.PID_Update();
+        
+        _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
+        _Pitch.SetDesired(_Alt.GetOutput());
+        _Pitch.SetCurrentValue(in_pitch.current);
+        _Pitch.PID_Update();
+        r_outputs.pitch = _Pitch.GetOutput();
+        _data_to_log.field3 = in_pitch.desired;
+        _data_to_log.field6 = in_alt.desired;
+        _data_to_log.field7 = _Alt.GetOutput();
+        break;
+    case 7: //WHAT DOES THIS CASE DO ?
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
         _Vel.SetDesired(in_vel.desired);
         _Vel.SetCurrentValue(in_vel.current);

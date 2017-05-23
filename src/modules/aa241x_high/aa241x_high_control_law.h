@@ -49,7 +49,8 @@ void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_yaw, \
                   in_state_s & in_vel, \
                   in_state_s & in_alt, \
-                  in_state_s & in_heading \
+                  in_state_s & in_heading, \
+                  in_state_s & in_rollForHeading \
                   );
 
 #endif /* AA241X_FW_CONTROL_MAIN_H_ */
