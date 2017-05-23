@@ -60,6 +60,7 @@
 
 #include "aa241x_high_params.h"
 #include "aa241x_high_aux.h"
+#include "aa241x_high_control_law.cpp"
 
 #include <matrix/math.hpp>
 

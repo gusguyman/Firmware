@@ -33,8 +33,8 @@ float dt = 1.0/60;
 
 int flight_mode = aah_parameters.flight_mode;
 float velocity_desired = 0.0f;
-float altitude_desired = aah_parameters.altitude_desired;
-float grndspeed_desired = 0.0f; 
+float altitude_desired = 0.0f;
+float grndspeed_desired = 0.0f;
 float heading_desired = 0.0f;
 
 /**
@@ -51,6 +51,8 @@ in_state_s vel_s;
 in_state_s alt_s;
 in_state_s heading_s;
 
+logger_s data_to_log;
+
 
 void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_pitch, \
@@ -61,7 +63,6 @@ void UpdateInputs(in_state_s & in_roll, \
                   ) {
 //Update Parameter stuff
     flight_mode = aah_parameters.flight_mode;
-    altitude_desired = aah_parameters.altitude_desired;
 
     in_roll.kp = aah_parameters.proportional_roll_gain;
     in_roll.kd = aah_parameters.derivative_roll_gain;
@@ -93,15 +94,15 @@ void UpdateInputs(in_state_s & in_roll, \
     in_alt.current = position_D_baro;
     in_alt.desired = altitude_desired;
 
-    in_heading.kp = aah_parameters.proportional_altitude_gain;
-    in_heading.kd = aah_parameters.derivative_altitude_gain;
-    in_heading.ki = aah_parameters.integrator_altitude_gain;
+    in_heading.kp = aah_parameters.proportional_heading_gain;
+    in_heading.kd = aah_parameters.derivative_heading_gain;
+    in_heading.ki = aah_parameters.integrator_heading_gain;
     in_heading.current = ground_course;
     in_heading.desired = heading_desired;
 }
 
 MazController mazController;
-mazController.GetLogData(data_to_log);
+//mazController.GetLogData(data_to_log);
 
 void flight_control() {
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
@@ -111,6 +112,8 @@ void flight_control() {
         pitch_desired = pitch;
         velocity_desired = speed_body_u;
         heading_desired = ground_course;
+        altitude_desired = position_D_baro;
+        mazController.SetPos(position_N, position_E);
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
 	}

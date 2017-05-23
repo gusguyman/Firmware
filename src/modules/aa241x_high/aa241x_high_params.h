@@ -45,6 +45,10 @@ struct aah_params {
         float integrator_altitude_gain;
         float derivative_altitude_gain;
 
+        float proportional_heading_gain;
+        float integrator_heading_gain;
+        float derivative_heading_gain;
+
         float proportional_th_gain;
         float integrator_th_gain;
         float derivative_th_gain;
@@ -96,6 +100,10 @@ struct aah_param_handles {
         param_t proportional_altitude_gain;
         param_t integrator_altitude_gain;
         param_t derivative_altitude_gain;
+
+        param_t proportional_heading_gain;
+        param_t integrator_heading_gain;
+        param_t derivative_heading_gain;
 
         param_t proportional_th_gain;
         param_t integrator_th_gain;

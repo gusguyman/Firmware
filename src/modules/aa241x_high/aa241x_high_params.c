@@ -61,6 +61,10 @@ PARAM_DEFINE_FLOAT(AAH_ALT_P, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_ALT_I, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_ALT_D, 1.0f);
 
+PARAM_DEFINE_FLOAT(AAH_HEAD_P, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_HEAD_I, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_HEAD_D, 1.0f);
+
 // Theta gains
 PARAM_DEFINE_FLOAT(AAH_TH_P, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_TH_I, 1.0f);
@@ -92,7 +96,7 @@ int aah_parameters_init(struct aah_param_handles *h)
 
 	h-> proportional_roll_gain 		= param_find("AAH_ROLL_P");
 	h-> integrator_roll_gain 		= param_find("AAH_ROLL_I");
-	h-> derivative_roll_gain 		= param_find("AAH_ROLL_D");	
+	h-> derivative_roll_gain 		= param_find("AAH_ROLL_D");
 
 	h-> proportional_pitch_gain		= param_find("AAH_PITCH_P");
 	h-> integrator_pitch_gain 		= param_find("AAH_PITCH_I");
@@ -100,7 +104,11 @@ int aah_parameters_init(struct aah_param_handles *h)
 
 	h-> proportional_altitude_gain 	= param_find("AAH_ALT_P");
 	h-> integrator_altitude_gain 	= param_find("AAH_ALT_I");
-	h-> derivative_altitude_gain 	= param_find("AAH_ALT_D");	
+	h-> derivative_altitude_gain 	= param_find("AAH_ALT_D");
+
+    h-> proportional_heading_gain 	= param_find("AAH_HEAD_P");
+	h-> integrator_heading_gain 	= param_find("AAH_HEAD_I");
+	h-> derivative_heading_gain 	= param_find("AAH_HEAD_D");
 
 	h-> proportional_th_gain 		= param_find("AAH_TH_P");
 	h-> integrator_th_gain 			= param_find("AAH_TH_I");
@@ -110,9 +118,9 @@ int aah_parameters_init(struct aah_param_handles *h)
 
 	h-> altitude_desired 			= param_find("AAH_ALT_DESIRED");
 
-	h-> proportional_vel_gain 		= param_find("AAH_VEL_P");
-	h-> integrator_vel_gain 		= param_find("AAH_VEL_I");
-	h-> derivative_vel_gain 		= param_find("AAH_VEL_D");
+	h-> proportional_velocity_gain 		= param_find("AAH_VEL_P");
+	h-> integrator_velocity_gain 		= param_find("AAH_VEL_I");
+	h-> derivative_velocity_gain 		= param_find("AAH_VEL_D");
 
 	// TODO: add the above line for each of your custom parameters........
 
@@ -140,6 +148,10 @@ int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *
 	param_get(h->integrator_altitude_gain, &(p->integrator_altitude_gain));
 	param_get(h->derivative_altitude_gain, &(p->derivative_altitude_gain));
 
+    param_get(h->proportional_heading_gain, &(p->proportional_heading_gain));
+	param_get(h->integrator_heading_gain, &(p->integrator_heading_gain));
+	param_get(h->derivative_heading_gain, &(p->derivative_heading_gain));
+
 	param_get(h->proportional_th_gain, &(p->proportional_th_gain));
 	param_get(h->integrator_th_gain, &(p->integrator_th_gain));
 	param_get(h->derivative_th_gain, &(p->derivative_th_gain));
@@ -148,9 +160,9 @@ int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *
 
 	param_get(h->altitude_desired, &(p->altitude_desired));
 
-	param_get(h->proportional_vel_gain, &(p->proportional_vel_gain));
-	param_get(h->integrator_vel_gain, &(p->integrator_vel_gain));
-	param_get(h->derivative_vel_gain, &(p->derivative_vel_gain));
+	param_get(h->proportional_velocity_gain, &(p->proportional_velocity_gain));
+	param_get(h->integrator_velocity_gain, &(p->integrator_velocity_gain));
+	param_get(h->derivative_velocity_gain, &(p->derivative_velocity_gain));
 
 	// TODO: add the above line for each of your custom parameters.....
 

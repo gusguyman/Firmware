@@ -59,8 +59,8 @@ void MazController::GetLogData(logger_s & in_log) {
 float MazController::Find_perp_distance(const in_state_s & in_ground_course) {
 
     float d = sqrtf(pow((_cur_N - _prev_N),2.0f)+ pow((_cur_E - _prev_E),2.0f));
-    float goal_N = _prev_goal_N + d * cosf(in_ground_course.desired);
-    float goal_E = _prev_goal_E + d * sinf(in_ground_course.desired);
+    float goal_N = _prev_goal_N + d * cosf(in_ground_course.desired - in_ground_course.current);
+    float goal_E = _prev_goal_E + d * sinf(in_ground_course.desired - in_ground_course.current);
     float perp_d = sqrtf(pow((_cur_N - goal_N),2.0f) + pow((_cur_E - goal_E),2.0f));
 
     //Update next iters inputs and return
@@ -74,6 +74,10 @@ float MazController::Find_perp_distance(const in_state_s & in_ground_course) {
 void MazController::SetPos(float in_cur_N, float in_cur_E) {
     _cur_E = in_cur_E;
     _cur_N = in_cur_N;
+    _prev_N = in_cur_N;
+    _prev_E = in_cur_E;
+    _prev_goal_N = in_cur_N;
+    _prev_goal_E = in_cur_E;
 }
 
 void MazController::Controller(int flight_mode, output_s & r_outputs, \
@@ -85,6 +89,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
                          const in_state_s & in_heading \
                          ) {
     _data_to_log.field1 = float(flight_mode);
+    float current;
     switch(flight_mode)
     {
     case 0: // Constant Roll
@@ -125,17 +130,16 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
         _Vel.SetDesired(in_vel.desired);
         _Vel.SetCurrentValue(in_vel.current);
+        _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
-<<<<<<< HEAD
-        r_outputs.vel = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-=======
+
         r_outputs.throttle = _Vel.GetOutput();
->>>>>>> 762d43c2af0c7ca60fe3ea98774d99403626728f
+
 
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
-        float current;
+
         if (abs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
@@ -164,7 +168,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Heading.PID_Update();
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);// + (in_yaw.desired - in_heading.desired));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -176,8 +180,8 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         r_outputs.roll = _Roll.GetOutput();
         _data_to_log.field2 = in_roll.desired;
 
-        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
-
+        _data_to_log.field8 = _Heading.GetOutput() + in_yaw.desired;
+        _data_to_log.field9 = Find_perp_distance(in_heading);
         _data_to_log.field10 = in_heading.desired;
         _data_to_log.field11 = _prev_goal_N;
         _data_to_log.field12 = _prev_goal_E;
@@ -190,8 +194,8 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Heading.SetCurrentValue(Find_perp_distance(in_heading));
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
-        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
-
+        _data_to_log.field8 = _Heading.GetOutput() + in_yaw.desired;
+        _data_to_log.field9 = Find_perp_distance(in_heading);
         _data_to_log.field10 = in_heading.desired;
         _data_to_log.field11 = _prev_goal_N;
         _data_to_log.field12 = _prev_goal_E;
@@ -199,7 +203,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);// + (in_yaw.desired - in_heading.desired));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -214,7 +218,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
-        float current;
+
         if (abs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
@@ -237,8 +241,8 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Heading.SetCurrentValue(Find_perp_distance(in_heading));
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
-        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
-
+        _data_to_log.field8 = _Heading.GetOutput() + in_yaw.desired;
+        _data_to_log.field9 = Find_perp_distance(in_heading);
         _data_to_log.field10 = in_heading.desired;
         _data_to_log.field11 = _prev_goal_N;
         _data_to_log.field12 = _prev_goal_E;
@@ -246,7 +250,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -264,16 +268,17 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
         _Vel.SetDesired(in_vel.desired);
         _Vel.SetCurrentValue(in_vel.current);
+        _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
-        r_outputs.vel = _Vel.GetOutput();
+        r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
 
         _Heading.SetDesired(0.0f); //Want no perp distance to line
         _Heading.SetCurrentValue(Find_perp_distance(in_heading));
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
-        _data_to_log.field8 = _Heading.GetOutput() + (in_yaw.desired - in_heading.desired);
-
+        _data_to_log.field8 = _Heading.GetOutput() + in_yaw.desired;
+        _data_to_log.field9 = Find_perp_distance(in_heading);
         _data_to_log.field10 = in_heading.desired;
         _data_to_log.field11 = _prev_goal_N;
         _data_to_log.field12 = _prev_goal_E;
@@ -281,7 +286,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -296,7 +301,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
-        float current;
+
         if (abs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {

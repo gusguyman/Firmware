@@ -80,7 +80,7 @@ class MazController
         float _prev_goal_E;
         float _cur_N;
         float _cur_E;
-        struct logger_s _data_to_log;
+        logger_s _data_to_log;
 };
 
 #endif // MAZCONTROLLER_H
