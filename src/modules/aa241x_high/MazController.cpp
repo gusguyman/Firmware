@@ -274,7 +274,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         r_outputs.roll = _Roll.GetOutput();
         _data_to_log.field2 = in_rollForHeading.desired;
 
-        
+
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
@@ -286,7 +286,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetDesired(in_alt.desired);
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
-        
+
         _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
         _Pitch.SetDesired(_Alt.GetOutput());
         _Pitch.SetCurrentValue(in_pitch.current);
@@ -351,10 +351,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field6 = in_alt.desired;
         _data_to_log.field7 = _Alt.GetOutput();
 
-    default:
-        //Do nothing, return all manual inputs
-        break;
-    case 8: //Coordinated turn, with altitude hold and constant velocity        
+    case 8: //Coordinated turn, with altitude hold and constant velocity
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
         _Yaw.SetDesired(in_yaw.desired);  //Should be published by the mission
         _Yaw.SetCurrentValue(in_yaw.current);
@@ -377,7 +374,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        
+
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
@@ -389,7 +386,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetDesired(in_alt.desired);
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
-        
+
         _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
         _Pitch.SetDesired(_Alt.GetOutput());
         _Pitch.SetCurrentValue(in_pitch.current);
@@ -410,6 +407,10 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
     		r_outputs.pitch = -1.00f; // hopefully this will pitch down and not up ^^
     	}
     	break;
+
+    default:
+        //Do nothing, return all manual inputs
+        break;
     }
 }
 
