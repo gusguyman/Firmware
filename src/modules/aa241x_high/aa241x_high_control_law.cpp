@@ -135,7 +135,7 @@ void flight_control() {
 	outputs.roll = man_roll_in;
 	outputs.yaw = man_yaw_in;
 	outputs.throttle = man_throttle_in;
-  outputs.rollForHeading = man_roll_in;
+	outputs.rollForHeading = man_roll_in;
 
 	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
 
