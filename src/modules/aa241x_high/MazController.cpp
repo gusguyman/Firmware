@@ -500,9 +500,9 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         	_data_to_log.field3 = in_pitch.desired;
         	_data_to_log.field6 = in_alt.desired;
         	_data_to_log.field7 = _Alt.GetOutput();
-    		
-    		break;
     		}
+    		break;
+    	
     }
 }
 
