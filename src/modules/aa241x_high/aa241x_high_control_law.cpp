@@ -159,10 +159,10 @@ void flight_control() {
     roll_servo_out = outputs.roll;
     throttle_servo_out = outputs.throttle;
     
+    
     // Waypoint Navigation
 
-    
-    if (current_command = 0){ // turning
+    if (current_command == 0){ // turning
         if (in_yaw.current - path_planning.heading(target_index) > 0.1){
         	if (path_planning.turn(target_index) = -1){ // Turning left
         		mazController.turn_left();
@@ -170,11 +170,11 @@ void flight_control() {
         	if (path_planning.turn(target_index) = +1){ // Turning right
         		mazController.turn_right();
         	}
-        	current_command = 1;
+        	current_command = 1;  //WHAT ??  WHERE DO YOU UPDATE current_command ?
         }
 
     }
-    if (current_command = 1){ // follow the line
+    if (current_command == 1){ // follow the line
     	mazController.SetPos(position_N, position_E);// save the current position
     	float target_N = path_planning.target_N(target_index);
     	float target_E = path_planning.target_E(target_index);
@@ -184,7 +184,7 @@ void flight_control() {
     		mazController.follow_line();
     	}
 
-    	target_index += 1;
+    	target_index += 1; 		//INITIALIZATION OF target_index?
 
     }
 

@@ -628,14 +628,14 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         //Add geofencing : if out of bounds : turn at constant speed and constant altitude
         if (_cur_N > 37.402887f) || (_cur_N < 37.397310f) || (_cur_E < -122.156261f) || (_cur_E > -122.152821f){
             _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-            _Yaw.SetDesired(in_yaw.desired);  //Should be published by the mission
+            _Yaw.SetDesired(in_yaw.desired);  //Should be published by the mission  //WHAT ??
             _Yaw.SetCurrentValue(in_yaw.current);
             _Yaw.PID_Update();
             r_outputs.yaw = _Yaw.GetOutput();
             _data_to_log.field4 = in_yaw.desired;
 
             _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
-            _Roll.SetDesired(PI/6); 
+            _Roll.SetDesired(PI/6); 						//WHAT ?? HOW DO YOU KNOW WHICH WAY TO TURN (LEFT OR RIGHT) ?
             _Roll.SetCurrentValue(in_rollForHeading.current);
             _Roll.PID_Update();
             r_outputs.roll = _Roll.GetOutput();
@@ -643,7 +643,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
 
             _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-            _Vel.SetDesired(11);
+            _Vel.SetDesired(11);					//WHAT ?? WHY 11 ?
             _Vel.SetCurrentValue(in_vel.current);
             _Vel.SetBounds(0.0f, 1.0f);
             _Vel.PID_Update();
