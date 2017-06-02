@@ -39,6 +39,9 @@ float altitude_desired = 0.0f;
 float grndspeed_desired = 0.0f;
 float heading_desired = 0.0f;
 
+int current_command = 0;
+
+
 /**
  * Main function in which your code should be written.
  *
@@ -135,7 +138,7 @@ void flight_control() {
 	outputs.roll = man_roll_in;
 	outputs.yaw = man_yaw_in;
 	outputs.throttle = man_throttle_in;
-  outputs.rollForHeading = man_roll_in;
+	outputs.rollForHeading = man_roll_in;
 
 	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
 
@@ -155,5 +158,34 @@ void flight_control() {
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
     throttle_servo_out = outputs.throttle;
+    
+    
+    // Waypoint Navigation
+
+    if (current_command == 0){ // turning
+        if (in_yaw.current - path_planning.heading(target_index) > 0.1){
+        	if (path_planning.turn(target_index) = -1){ // Turning left
+        		mazController.turn_left();
+        	} 
+        	if (path_planning.turn(target_index) = +1){ // Turning right
+        		mazController.turn_right();
+        	}
+        	current_command = 1;  //WHAT ??  WHERE DO YOU UPDATE current_command ?
+        }
+
+    }
+    if (current_command == 1){ // follow the line
+    	mazController.SetPos(position_N, position_E);// save the current position
+    	float target_N = path_planning.target_N(target_index);
+    	float target_E = path_planning.target_E(target_index);
+
+    	float dist_to_target = sqrt(pow(cur_N-target_N,2.0f)+pow(cur_E-target_E,2.0f))
+    	if (dist_to_target > 5){
+    		mazController.follow_line();
+    	}
+
+    	target_index += 1; 		//INITIALIZATION OF target_index?
+
+    }
 
 }

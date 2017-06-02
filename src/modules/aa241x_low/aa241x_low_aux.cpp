@@ -155,7 +155,6 @@ struct aal_params aal_parameters = {};		// struct containing all of the user edi
 
 struct mis_params mission_parameters = {};
 
-
 /* functions */
 
 // TODO: DEFINE FUNCTIONS HERE
