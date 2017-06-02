@@ -96,16 +96,9 @@ void MazController::SetPos(float in_cur_N, float in_cur_E) {
 }
 
 void MazController::turn_left(){
-        _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(in_yaw.desired);  //Should be published by the mission
-        _Yaw.SetCurrentValue(in_yaw.current);
-        _Yaw.PID_Update();
-        r_outputs.yaw = _Yaw.GetOutput();
-        _data_to_log.field4 = in_yaw.desired;
 
         _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
         _Roll.SetDesired(-PI/3); 
-        //_Roll.SetDesired(-PI/3); depending on which way we turn 
         _Roll.SetCurrentValue(in_rollForHeading.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
@@ -119,42 +112,15 @@ void MazController::turn_left(){
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        
-        _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
-        _Alt.SetBounds(-0.5f, 0.5f);
-
-        if (abs(in_alt.desired - in_alt.current) < 1.00) {
-            current = in_alt.desired;
-        } else {
-            current = in_alt.current;
-        }
-        _Alt.SetDesired(in_alt.desired);
-        _Alt.SetCurrentValue(current);
-        _Alt.PID_Update();
-        
-        _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
-        _Pitch.SetDesired(_Alt.GetOutput());
-        _Pitch.SetCurrentValue(in_pitch.current);
-        _Pitch.PID_Update();
-        r_outputs.pitch = _Pitch.GetOutput();
-        _data_to_log.field3 = in_pitch.desired;
-        _data_to_log.field6 = in_alt.desired;
-        _data_to_log.field7 = _Alt.GetOutput();
 
 }
 
 
 void MazController::turn_right(){
-        _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(in_yaw.desired);  //Should be published by the mission
-        _Yaw.SetCurrentValue(in_yaw.current);
-        _Yaw.PID_Update();
-        r_outputs.yaw = _Yaw.GetOutput();
-        _data_to_log.field4 = in_yaw.desired;
+
 
         _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
-        _Roll.SetDesired(PI/3); 
-        //_Roll.SetDesired(-PI/3); depending on which way we turn 
+        _Roll.SetDesired(PI/3);  
         _Roll.SetCurrentValue(in_rollForHeading.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
@@ -168,33 +134,13 @@ void MazController::turn_right(){
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        
-        _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
-        _Alt.SetBounds(-0.5f, 0.5f);
-
-        if (abs(in_alt.desired - in_alt.current) < 1.00) {
-            current = in_alt.desired;
-        } else {
-            current = in_alt.current;
-        }
-        _Alt.SetDesired(in_alt.desired);
-        _Alt.SetCurrentValue(current);
-        _Alt.PID_Update();
-        
-        _Pitch.SetGains(in_pitch.kp, in_pitch.kd, in_pitch.ki);
-        _Pitch.SetDesired(_Alt.GetOutput());
-        _Pitch.SetCurrentValue(in_pitch.current);
-        _Pitch.PID_Update();
-        r_outputs.pitch = _Pitch.GetOutput();
-        _data_to_log.field3 = in_pitch.desired;
-        _data_to_log.field6 = in_alt.desired;
-        _data_to_log.field7 = _Alt.GetOutput();
 
 }
 
 void MazController::follow_line(){
+
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(in_vel.desired);
+        _Vel.SetDesired(in_vel.desired);   //ARE WE SETTING V TO 15 M/S IN A STRAIGHT LINE ??
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
@@ -236,7 +182,7 @@ void MazController::follow_line(){
         } else {
             current = in_alt.current;
         }
-        _Alt.SetDesired(in_alt.desired);
+        _Alt.SetDesired(in_alt.desired);  //SET A FIXED ALTITUDE DESIRED HERE
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
         
@@ -248,7 +194,7 @@ void MazController::follow_line(){
         _data_to_log.field3 = in_pitch.desired;
         _data_to_log.field6 = in_alt.desired;
         _data_to_log.field7 = _Alt.GetOutput();
-        break;
+
 }
 
 
