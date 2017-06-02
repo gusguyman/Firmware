@@ -65,8 +65,13 @@ class MazController
 
         float Find_perp_distance(const in_state_s & in_ground_course);
         void SetPos(float in_cur_N, float in_cur_E);
+        void SetGoal(float in_goal_N, float in_goal_E);
+        void SetPosInit(float in_cur_N, float in_cur_E);
         void GetLogData(logger_s & in_log);
-
+        int turn_left() {return 12;}
+        int turn_right() {return 14;}
+        int follow_line() {return 15;}
+        float Dist_to_line();
 
     private:
         principal_axis_c _Yaw;
@@ -82,6 +87,8 @@ class MazController
         float _prev_goal_E;
         float _cur_N;
         float _cur_E;
+        float _goal_N;
+        float _goal_E;
         logger_s _data_to_log;
 };
 

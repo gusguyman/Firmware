@@ -28,6 +28,7 @@
 #include <mathlib/mathlib.h>
 
 #include "aa241x_high_aux.h"
+#include "../aa241x_low/aa241x_low_control_law.h"
 #include "MazController.h"
 
 // TODO: write your function prototypes here
@@ -52,5 +53,10 @@ void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_heading, \
                   in_state_s & in_rollForHeading \
                   );
+
+bool turn_is_complete(float ep);
+bool straight_is_complete(float ep) ;
+bool turning() ;
+bool going_straight() ;
 
 #endif /* AA241X_FW_CONTROL_MAIN_H_ */

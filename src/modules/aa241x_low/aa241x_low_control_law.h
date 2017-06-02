@@ -59,7 +59,8 @@
 #include <systemlib/systemlib.h>
 #include <mathlib/mathlib.h>
 #include <vector>
-
+#include <numeric>
+#include <algorithm>
 /*
  * Declare variables here that you may want to access
  * in multiple different function.
@@ -78,5 +79,12 @@ struct target_s {
     bool turnLeft;
     float heading_desired;
 };
-std::vector<target_s> target_list;
+extern std::vector<target_s> target_list;
+//target_list.reserve(5);
+extern bool new_targets;
+extern int target_idx;
+
+/*std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
+                               float lat_v, float lon_v);
+*/
 #endif /* AA241X_SLOW_H_ */

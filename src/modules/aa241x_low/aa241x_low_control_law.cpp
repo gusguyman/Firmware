@@ -59,22 +59,25 @@ using namespace aa241x_low;
  *
  * This loop executes at ~50Hz, but is not guaranteed to be 50Hz every time.
  */
-bool new_targets;
-target_list.reserve(5);
-vector<float> lat_vals(3);
-vector<float> lon_vals(3);
 
-vector<target_s> order_targets(vector<float> lat_vals, vector<float> lon_vals, float lat_start, float lon_start, \
+std::vector<float> lat_vals(3);
+std::vector<float> lon_vals(3);
+int target_idx = 0;
+bool new_targets = true;
+std::vector<target_s> target_list;
+//target_list.reserve(5);
+/*
+std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
                                float lat_v, float lon_v) {
-    int N = lat_vals.size()
+    int N = lat_vals.size();
     std::vector<int> idxs(N);
     std::iota(std::begin(idxs), std::end(idxs), 0);
     float min_time = 0;
     float min_dist = 0;
     std::vector<int> best_order(N);
     while (std::next_permutation(std::begin(idxs), std::end(idxs))) {
-        dist = 0;
-        time = 0;
+        float dist = 0;
+        float time = 0;
         for (int i; i<N; i++) {
 
 
@@ -84,15 +87,12 @@ vector<target_s> order_targets(vector<float> lat_vals, vector<float> lon_vals, f
 
 
 }
+*/
 
 void low_loop()
 {
 
 	float my_float_variable = 0.0f;		/**< example float variable */
-    if new_targets {
-
-
-    }
 
 	// getting high data value example
 	// float my_high_data = high_data.field1;

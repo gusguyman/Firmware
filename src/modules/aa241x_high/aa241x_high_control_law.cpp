@@ -59,6 +59,24 @@ in_state_s rollForHeading_s;
 
 logger_s data_to_log;
 
+bool turn_is_complete(float ep) {
+    float diff = abs(yaw - heading_desired);
+    return (diff < ep);
+}
+
+bool straight_is_complete(float ep) {
+    float dist = sqrt(pow(position_N - target_list[target_idx].pos_N, 2) + \
+                      pow(position_E - target_list[target_idx].pos_E,2));
+    return (dist < ep);
+}
+
+bool turning() {
+    return (current_command == 0);
+}
+
+bool going_straight() {
+    return (current_command == 1);
+}
 
 void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_pitch, \
@@ -69,7 +87,6 @@ void UpdateInputs(in_state_s & in_roll, \
                   in_state_s & in_rollForHeading \
                   ) {
 //Update Parameter stuff
-    flight_mode = aah_parameters.flight_mode;
 
     in_roll.kp = aah_parameters.proportional_roll_gain;
     in_roll.kd = aah_parameters.derivative_roll_gain;
@@ -116,7 +133,7 @@ void UpdateInputs(in_state_s & in_roll, \
 
 MazController mazController;
 //mazController.GetLogData(data_to_log);
-
+bool use_targets = true;
 void flight_control() {
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
                                                                  //	should only occur on first engagement since this is 59Hz loop
@@ -127,7 +144,7 @@ void flight_control() {
         heading_desired = ground_course;
         altitude_desired = position_D_baro;
         rollForHeading_desired = roll;
-        mazController.SetPos(position_N, position_E);
+        mazController.SetPosInit(position_N, position_E);
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
 	}
@@ -139,6 +156,47 @@ void flight_control() {
 	outputs.yaw = man_yaw_in;
 	outputs.throttle = man_throttle_in;
 	outputs.rollForHeading = man_roll_in;
+
+    if(new_targets) {
+        target_idx = 0;
+        new_targets = false;
+        current_command = 0;
+    } else {
+        if (turning()) {
+            if (turn_is_complete(0.2f)) {
+                mazController.SetPosInit(position_N, position_E);
+                mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_N);
+                current_command = 1;
+                flight_mode = mazController.follow_line();
+                //SET desired target if needed
+            } else {
+                // nothing to be done here
+            }
+        } else {
+            if (straight_is_complete(target_list[target_idx].radius)) {
+                target_idx ++;
+                if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
+                    yaw_desired = yaw;
+                    roll_desired = 0;
+                    pitch_desired = 0;
+                    velocity_desired = 0;
+                    altitude_desired = position_D_baro;
+                    current_command = 1;
+                } else {
+                    flight_mode = target_list[target_idx].turnLeft ? \
+                        mazController.turn_left() : \
+                        mazController.turn_right();
+                        yaw_desired = target_list[target_idx].heading_desired;
+                    current_command = 0;
+                }
+            } else {
+                mazController.SetPos(position_N, position_E);
+            }
+        }
+    }
+    if (!use_targets) {
+        flight_mode = aah_parameters.flight_mode;
+    }
 
 	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
 
@@ -158,34 +216,5 @@ void flight_control() {
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
     throttle_servo_out = outputs.throttle;
-    
-    
-    // Waypoint Navigation
-
-    if (current_command == 0){ // turning
-        if (in_yaw.current - path_planning.heading(target_index) > 0.1){
-        	if (path_planning.turn(target_index) = -1){ // Turning left
-        		mazController.turn_left();
-        	} 
-        	if (path_planning.turn(target_index) = +1){ // Turning right
-        		mazController.turn_right();
-        	}
-        	current_command = 1;  //WHAT ??  WHERE DO YOU UPDATE current_command ?
-        }
-
-    }
-    if (current_command == 1){ // follow the line
-    	mazController.SetPos(position_N, position_E);// save the current position
-    	float target_N = path_planning.target_N(target_index);
-    	float target_E = path_planning.target_E(target_index);
-
-    	float dist_to_target = sqrt(pow(cur_N-target_N,2.0f)+pow(cur_E-target_E,2.0f))
-    	if (dist_to_target > 5){
-    		mazController.follow_line();
-    	}
-
-    	target_index += 1; 		//INITIALIZATION OF target_index?
-
-    }
 
 }
