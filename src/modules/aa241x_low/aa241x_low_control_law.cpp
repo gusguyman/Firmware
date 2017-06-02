@@ -95,6 +95,7 @@ void low_loop()
 
 	float my_float_variable = 0.0f;		/**< example float variable */
     if (first_run) {
+        target_list.reserve(5);
         target_s target1;
         target_s target2;
         target_s target3;
