@@ -523,10 +523,6 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
     		r_outputs.pitch = -1.00f; // hopefully this will pitch down and not up ^^
     	}
     	break;
-
-    default:
-        //Do nothing, return all manual inputs
-        break;
     case 9: //Coordinated turn at 60° banking angle, with altitude hold and constant velocity of 15 m/s
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
         _Yaw.SetDesired(in_yaw.desired);  //Should be published by the mission
@@ -629,7 +625,11 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
             _data_to_log.field6 = in_alt.desired;
             _data_to_log.field7 = _Alt.GetOutput();
         }
-            break;
+        break;
+
+    default:
+        //Do nothing, return all manual inputs
+        break;
     }
 }
 
