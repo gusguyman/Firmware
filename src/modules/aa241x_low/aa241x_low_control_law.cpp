@@ -63,8 +63,9 @@ using namespace aa241x_low;
 std::vector<float> lat_vals(3);
 std::vector<float> lon_vals(3);
 int target_idx = 0;
-bool new_targets = true;
+bool new_targets = false;
 std::vector<target_s> target_list;
+
 //target_list.reserve(5);
 /*
 std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
@@ -88,11 +89,37 @@ std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<flo
 
 }
 */
-
+bool first_run = true;
 void low_loop()
 {
 
 	float my_float_variable = 0.0f;		/**< example float variable */
+    if (first_run) {
+        target_s target1;
+        target_s target2;
+        target_s target3;
+
+        target1.heading_desired = 0.0;
+        target1.turnLeft = true;
+        target1.pos_E = 0.0f; //CHANGE THIS!
+        target1.pos_N = 0.0f; //CHANGE THIS!
+        target_list.push_back(target1);
+
+        target2.heading_desired = 1.5;
+        target2.turnLeft = true;
+        target2.pos_E = 10.0f; //CHANGE THIS!
+        target2.pos_N = 10.0f; //CHANGE THIS!
+        target_list.push_back(target2);
+
+        target3.heading_desired = -1.5;
+        target3.turnLeft = true;
+        target3.pos_E = 10.0f; //CHANGE THIS!
+        target3.pos_N = 10.0f; //CHANGE THIS!
+        target_list.push_back(target3);
+
+        first_run = false;
+        new_targets = true;
+    }
 
 	// getting high data value example
 	// float my_high_data = high_data.field1;
