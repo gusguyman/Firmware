@@ -58,6 +58,7 @@
 #include <systemlib/perf_counter.h>
 #include <systemlib/systemlib.h>
 #include <mathlib/mathlib.h>
+#include <vector>
 
 /*
  * Declare variables here that you may want to access
@@ -68,5 +69,14 @@
  * Declare function prototypes here.
  */
 
-
+struct target_s {
+    float lat;
+    float pos_N;
+    float lon;
+    float pos_E;
+    float radius;
+    bool turnLeft;
+    float heading_desired;
+};
+std::vector<target_s> target_list;
 #endif /* AA241X_SLOW_H_ */
