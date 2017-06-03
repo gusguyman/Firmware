@@ -67,7 +67,7 @@ bool new_targets = false;
 std::vector<target_s> target_list;
 
 //target_list.reserve(5);
-/*
+
 std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
                                float lat_v, float lon_v) {
     int N = lat_vals.size();
@@ -88,7 +88,7 @@ std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<flo
 
 
 }
-*/
+
 bool first_run = true;
 void low_loop()
 {
