@@ -80,11 +80,11 @@ struct target_s {
     float heading_desired;
 };
 extern std::vector<target_s> target_list;
-//target_list.reserve(5);
+
 extern bool new_targets;
 extern int target_idx;
 
-/*std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
+std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
                                float lat_v, float lon_v);
-*/
+
 #endif /* AA241X_SLOW_H_ */
