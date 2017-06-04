@@ -176,6 +176,10 @@ int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *
 	param_get(h->integrator_velocity_gain, &(p->integrator_velocity_gain));
 	param_get(h->derivative_velocity_gain, &(p->derivative_velocity_gain));
 
+	param_get(h->proportional_rollForHeading_gain, &(p->proportional_rollForHeading_gain));
+	param_get(h->integrator_rollForHeading_gain, &(p->integrator_rollForHeading_gain));
+	param_get(h->derivative_rollForHeading_gain, &(p->derivative_rollForHeading_gain));
+
 	// TODO: add the above line for each of your custom parameters.....
 
 	return OK;

@@ -232,7 +232,7 @@ void flight_control() {
             }
         }
     }
-    if (!use_targets) {
+    if (autopilot == 1) {
         flight_mode = aah_parameters.flight_mode;
     }
 
