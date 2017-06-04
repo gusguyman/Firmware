@@ -535,7 +535,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 12: //turn left
         _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
-        _Roll.SetDesired(-1.047f);
+        _Roll.SetDesired(1.047f);
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
@@ -553,7 +553,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 14: //turn right
         _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
-        _Roll.SetDesired(1.047f);
+        _Roll.SetDesired(-1.047f);
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();

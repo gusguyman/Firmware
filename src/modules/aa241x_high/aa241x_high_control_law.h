@@ -61,6 +61,8 @@ bool going_straight() ;
 
 void low_loop();
 
+bool switch_case();
+
 struct target_s {
     float lat;
     float pos_N;

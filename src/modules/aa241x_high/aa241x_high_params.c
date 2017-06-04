@@ -172,6 +172,8 @@ int aah_parameters_update(const struct aah_param_handles *h, struct aah_params *
 
 	param_get(h->altitude_desired, &(p->altitude_desired));
 
+	param_get(h->autopilot, &(p->autopilot));
+
 	param_get(h->proportional_velocity_gain, &(p->proportional_velocity_gain));
 	param_get(h->integrator_velocity_gain, &(p->integrator_velocity_gain));
 	param_get(h->derivative_velocity_gain, &(p->derivative_velocity_gain));

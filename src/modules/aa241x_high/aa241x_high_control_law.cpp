@@ -68,10 +68,12 @@ void low_loop();
 
 bool first_run = true;
 
-
+bool switch_case(){
+    return (autopilot == 0)
+}
 
 bool turn_is_complete(float ep) {
-    float diff = abs(yaw - heading_desired);
+    float diff = abs(yaw - yaw_desired);
     return (diff < ep);
 }
 
@@ -144,7 +146,7 @@ void UpdateInputs(in_state_s & in_roll, \
 
 MazController mazController;
 //mazController.GetLogData(data_to_log);
-bool use_targets = false;
+bool use_targets = true;
 void flight_control() {
 	if (first_run) {
 	    target_list.reserve(5);
@@ -152,22 +154,26 @@ void flight_control() {
 	    target_s target2;
 	    target_s target3;
 
-	    target1.heading_desired = -0.785f;
+	    target1.heading_desired = -2.355f;
 	    target1.turnLeft = true;
-	    target1.pos_E = position_E+5; //CHANGE THIS!
-	    target1.pos_N = position_N+5; //CHANGE THIS!
+	    target1.pos_E = 1944.0f; //CHANGE THIS!
+	    target1.pos_N = -2400.0f; //CHANGE THIS!
+        target1.radius = 10.0f;
 	    target_list.push_back(target1);
 
-	    target2.heading_desired = 1.57f;
+
+	    target2.heading_desired = 0.0f;
 	    target2.turnLeft = true;
-	    target2.pos_E = position_E; //CHANGE THIS!
-	    target2.pos_N = position_N + 5; //CHANGE THIS!
+	    target2.pos_E = 1944.0f; //CHANGE THIS!
+	    target2.pos_N = -2200.0f; //CHANGE THIS!
+        target2.radius = 10.0f;
 	    target_list.push_back(target2);
 
-	    target3.heading_desired = 3.14f;
+	    target3.heading_desired = 0.785f;
 	    target3.turnLeft = true;
-	    target3.pos_E = position_E; //CHANGE THIS!
-	    target3.pos_N = position_N; //CHANGE THIS!
+	    target3.pos_E = 1800.0f; //CHANGE THIS!
+	    target3.pos_N = -2200.0f; //CHANGE THIS!
+        target3.radius = 10.0f;
 	    target_list.push_back(target3);
 
 	    first_run = false;
@@ -199,11 +205,16 @@ void flight_control() {
         target_idx = 0;
         new_targets = false;
         current_command = 0;
+        flight_mode = target_list[target_idx].turnLeft ? \
+            mazController.turn_left() : \
+            mazController.turn_right();
+            yaw_desired = target_list[target_idx].heading_desired;
+
     } else {
         if (turning()) {
-            if (turn_is_complete(0.2f)) {
+            if (turn_is_complete(0.05f)) {
                 mazController.SetPosInit(position_N, position_E);
-                mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_N);
+                mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
                 flight_mode = mazController.follow_line();
                 //SET desired target if needed
@@ -232,7 +243,7 @@ void flight_control() {
             }
         }
     }
-    if (autopilot == 1) {
+    if (switch_case()) {
         flight_mode = aah_parameters.flight_mode;
     }
 
