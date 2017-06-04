@@ -539,7 +539,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
-        _data_to_log.field2 = in_rollForHeading.desired;
+        _data_to_log.field2 = in_roll.desired;
 
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
@@ -552,12 +552,12 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
     case 13: // anyone superstitious?
         break;
     case 14: //turn right
-        _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
+        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
         _Roll.SetDesired(1.047f);
-        _Roll.SetCurrentValue(in_rollForHeading.current);
+        _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
-        _data_to_log.field2 = in_rollForHeading.desired;
+        _data_to_log.field2 = in_roll.desired;
 
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
