@@ -74,11 +74,16 @@ PARAM_DEFINE_INT32(AAH_FLIGHT_MODE, 0);
 
 PARAM_DEFINE_FLOAT(AAH_ALT_DESIRED, 50.0f);
 
+PARAM_DEFINE_INT32(AAH_AUTOPILOT, 0);
 //PARAM_DEFINE_FLOAT(AAH_VEL_DESIRED, 1.0f);
 
 PARAM_DEFINE_FLOAT(AAH_VEL_P, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_VEL_I, 1.0f);
 PARAM_DEFINE_FLOAT(AAH_VEL_D, 1.0f);
+
+PARAM_DEFINE_FLOAT(AAH_ROLL_HEA_P, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_ROLL_HEA_I, 1.0f);
+PARAM_DEFINE_FLOAT(AAH_ROLL_HEA_D, 1.0f);
 
 int aah_parameters_init(struct aah_param_handles *h)
 {
@@ -116,11 +121,18 @@ int aah_parameters_init(struct aah_param_handles *h)
 
 	h-> flight_mode 				= param_find("AAH_FLIGHT_MODE");
 
+	h-> autopilot				= param_find("AAH_AUTOPILOT");
+
 	h-> altitude_desired 			= param_find("AAH_ALT_DESIRED");
 
 	h-> proportional_velocity_gain 		= param_find("AAH_VEL_P");
 	h-> integrator_velocity_gain 		= param_find("AAH_VEL_I");
 	h-> derivative_velocity_gain 		= param_find("AAH_VEL_D");
+
+	h-> proportional_rollForHeading_gain 		= param_find("AAH_ROLL_HEA_P");
+	h-> integrator_rollForHeading_gain 		= param_find("AAH_ROLL_HEA_I");
+	h-> derivative_rollForHeading_gain 		= param_find("AAH_ROLL_HEA_D");
+
 
 	// TODO: add the above line for each of your custom parameters........
 

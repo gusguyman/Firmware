@@ -34,6 +34,7 @@ float previous_integral_th = 0.0f;
 float dt = 1.0/60;
 
 int flight_mode = aah_parameters.flight_mode;
+int autopilot = aah_parameters.autopilot;
 float velocity_desired = 0.0f;
 float altitude_desired = 0.0f;
 float grndspeed_desired = 0.0f;
@@ -58,6 +59,16 @@ in_state_s heading_s;
 in_state_s rollForHeading_s;
 
 logger_s data_to_log;
+std::vector<float> lat_vals(3);
+std::vector<float> lon_vals(3);
+int target_idx = 0;
+bool new_targets = false;
+std::vector<target_s> target_list;
+void low_loop();
+
+bool first_run = true;
+
+
 
 bool turn_is_complete(float ep) {
     float diff = abs(yaw - heading_desired);
@@ -133,8 +144,35 @@ void UpdateInputs(in_state_s & in_roll, \
 
 MazController mazController;
 //mazController.GetLogData(data_to_log);
-bool use_targets = true;
+bool use_targets = false;
 void flight_control() {
+	if (first_run) {
+	    target_list.reserve(5);
+	    target_s target1;
+	    target_s target2;
+	    target_s target3;
+
+	    target1.heading_desired = -0.785f;
+	    target1.turnLeft = true;
+	    target1.pos_E = position_E+5; //CHANGE THIS!
+	    target1.pos_N = position_N+5; //CHANGE THIS!
+	    target_list.push_back(target1);
+
+	    target2.heading_desired = 1.57f;
+	    target2.turnLeft = true;
+	    target2.pos_E = position_E; //CHANGE THIS!
+	    target2.pos_N = position_N + 5; //CHANGE THIS!
+	    target_list.push_back(target2);
+
+	    target3.heading_desired = 3.14f;
+	    target3.turnLeft = true;
+	    target3.pos_E = position_E; //CHANGE THIS!
+	    target3.pos_N = position_N; //CHANGE THIS!
+	    target_list.push_back(target3);
+
+	    first_run = false;
+	    new_targets = true;
+	}
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
                                                                  //	should only occur on first engagement since this is 59Hz loop
         yaw_desired = yaw;

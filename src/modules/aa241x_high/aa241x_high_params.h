@@ -75,7 +75,7 @@ struct aah_params {
 
         float rollForHeading_desired;
 
-	// TODO: add custom parameter variable names here......
+	int autopilot;
 
 };
 
@@ -128,6 +128,8 @@ struct aah_param_handles {
         param_t flight_mode;
 
         param_t altitude_desired;
+
+        param_t autopilot;
 
 	// TODO: add custom parameter variable names here.......
 

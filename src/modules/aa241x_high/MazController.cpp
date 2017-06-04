@@ -401,7 +401,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (abs(in_alt.desired - in_alt.current) < 1.00) {
+        if (abs(in_alt.desired - in_alt.current) < 1.00f) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
@@ -448,7 +448,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(15);
+        _Vel.SetDesired(15.0f);
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
@@ -458,7 +458,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (abs(in_alt.desired - in_alt.current) < 1.00) {
+        if (abs(in_alt.desired - in_alt.current) < 1.0f) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
@@ -534,16 +534,16 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         }
         break;
     case 12: //turn left
-        _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
-        _Roll.SetDesired(-PI/3);
-        _Roll.SetCurrentValue(in_rollForHeading.current);
+        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
+        _Roll.SetDesired(-1.047f);
+        _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
         _data_to_log.field2 = in_rollForHeading.desired;
 
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(15);
+        _Vel.SetDesired(15.0f);
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
@@ -553,7 +553,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 14: //turn right
         _Roll.SetGains(in_rollForHeading.kp, in_rollForHeading.kd, in_rollForHeading.ki);
-        _Roll.SetDesired(PI/3);
+        _Roll.SetDesired(1.047f);
         _Roll.SetCurrentValue(in_rollForHeading.current);
         _Roll.PID_Update();
         r_outputs.roll = _Roll.GetOutput();
@@ -561,7 +561,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(15);
+        _Vel.SetDesired(15.0f);
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
@@ -570,7 +570,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 15: // follow line
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(in_vel.desired);   //ARE WE SETTING V TO 15 M/S IN A STRAIGHT LINE ??
+        _Vel.SetDesired(15.0f);   //ARE WE SETTING V TO 15 M/S IN A STRAIGHT LINE ??
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
@@ -578,7 +578,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field5 = in_vel.desired;
 
         _Heading.SetDesired(0.0f); //Want no perp distance to line
-        _Heading.SetCurrentValue(Dist_to_line());
+        _Heading.SetCurrentValue(-Dist_to_line());
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
         _data_to_log.field8 = _Heading.GetOutput() + in_yaw.desired;
@@ -607,7 +607,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (abs(in_alt.desired - in_alt.current) < 1.00) {
+        if (abs(in_alt.desired - in_alt.current) < 1.0f) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;

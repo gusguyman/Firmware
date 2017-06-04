@@ -59,4 +59,21 @@ bool straight_is_complete(float ep) ;
 bool turning() ;
 bool going_straight() ;
 
+void low_loop();
+
+struct target_s {
+    float lat;
+    float pos_N;
+    float lon;
+    float pos_E;
+    float radius;
+    bool turnLeft;
+    float heading_desired;
+};
+
+extern std::vector<target_s> target_list;
+//target_list.reserve(5);
+extern bool new_targets;
+extern int target_idx;
+
 #endif /* AA241X_FW_CONTROL_MAIN_H_ */
