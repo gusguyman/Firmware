@@ -155,26 +155,35 @@ void flight_control() {
 	    target_s target2;
 	    target_s target3;
 
-	    target1.yaw = 0.5f;
+	    //target1.yaw = 0.5f;
+        target1.yaw = 0.0f;
 	    target1.turnLeft = true;
-	    target1.pos_E = 1944.0f; //CHANGE THIS!
-	    target1.pos_N = -2400.0f; //CHANGE THIS!
-        target1.radius = 10.0f;
+	    //target1.pos_E = 1944.0f; //CHANGE THIS!
+	    //target1.pos_N = -2400.0f; //CHANGE THIS!
+        target1.pos_E = position_E; //CHANGE THIS!
+        target1.pos_N = position_N + 5.0f; //CHANGE THIS!
+        target1.radius = 1.5f;
 	    target_list.push_back(target1);
 
 
-	    target2.yaw = 0.0f;
-	    target2.turnLeft = false;
-	    target2.pos_E = 1944.0f; //CHANGE THIS!
-	    target2.pos_N = -2200.0f; //CHANGE THIS!
-        target2.radius = 10.0f;
+	    //target2.yaw = 0.0f;
+        target2.yaw = 0.57f;
+	    target2.turnLeft = true;
+	    //target2.pos_E = 1944.0f; //CHANGE THIS!
+	    //target2.pos_N = -2200.0f; //CHANGE THIS!
+        target2.pos_E = position_E - 5.0f;; //CHANGE THIS!
+        target2.pos_N = position_N + 5.0f; //CHANGE THIS!
+        target2.radius = 1.5f;
 	    target_list.push_back(target2);
 
-	    target3.yaw = 0.785;
+	    //target3.yaw = 0.785;
+        target3.yaw = -2.5f;
 	    target3.turnLeft = true;
-	    target3.pos_E = 1800.0f; //CHANGE THIS!
-	    target3.pos_N = -2200.0f; //CHANGE THIS!
-        target3.radius = 10.0f;
+	    //target3.pos_E = 1800.0f; //CHANGE THIS!
+	    //target3.pos_N = -2200.0f; //CHANGE THIS!
+        target3.pos_E = position_E; //CHANGE THIS!
+        target3.pos_N = position_N; //CHANGE THIS!
+        target3.radius = 1.5f;
 	    target_list.push_back(target3);
 
 	    first_run = false;
@@ -213,7 +222,7 @@ void flight_control() {
 
     } else {
         if (turning()) {
-            if (abs(yaw-target_yaw) < 0.1f) {
+            if (turn_is_complete(0.05f)) {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
@@ -244,7 +253,7 @@ void flight_control() {
             }
         }
     }
-    if (switch_case()) {
+    if (!use_targets) {
         flight_mode = aah_parameters.flight_mode;
     }
     

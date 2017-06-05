@@ -80,7 +80,7 @@ float MazController::Dist_to_line(){
     float b = _prev_goal_E - _goal_E;
     float c = -a*_goal_E-b*_goal_N;
 
-    float perp_d = abs(a*_cur_E+b*_cur_N+c)/sqrt(pow(a,2.0f)+pow(b,2.0f));
+    float perp_d = (a*_cur_E+b*_cur_N+c)/sqrt(pow(a,2.0f)+pow(b,2.0f));
 
     return perp_d;
 
@@ -584,7 +584,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field5 = in_vel.desired;
 
         _Heading.SetDesired(0.0f); //Want no perp distance to line
-        _Heading.SetCurrentValue(-Dist_to_line());
+        _Heading.SetCurrentValue(Dist_to_line());
         _Heading.SetGains(in_heading.kp, in_heading.kd, in_heading.ki);
         _Heading.PID_Update();
         _data_to_log.field8 = _Heading.GetOutput() + in_yaw.desired;
