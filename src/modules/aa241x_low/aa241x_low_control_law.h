@@ -52,15 +52,17 @@
 #include <math.h>
 #include <poll.h>
 #include <time.h>
-#include <drivers/drv_hrt.h>
-#include <systemlib/err.h>
-#include <geo/geo.h>
-#include <systemlib/perf_counter.h>
-#include <systemlib/systemlib.h>
-#include <mathlib/mathlib.h>
+//#include <drivers/drv_hrt.h>
+//#include <systemlib/err.h>
+//#include <geo/geo.h>
+//#include <systemlib/perf_counter.h>
+//#include <systemlib/systemlib.h>
+//#include <mathlib/mathlib.h>
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#include <iterator>
+#include <iostream>
 /*
  * Declare variables here that you may want to access
  * in multiple different function.
@@ -84,7 +86,7 @@ extern std::vector<target_s> target_list;
 extern bool new_targets;
 extern int target_idx;
 
-std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
-                               float lat_v, float lon_v);
-
+std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<float> tgt_y_list, float in_x, float in_y, \
+                               float in_v_x, float in_v_y) ;
+void low_loop();
 #endif /* AA241X_SLOW_H_ */

@@ -44,11 +44,11 @@
 
 // include header file
 #include "aa241x_low_control_law.h"
-#include "aa241x_low_aux.h"
+//#include "aa241x_low_aux.h"
 
-#include <uORB/uORB.h>
+//#include <uORB/uORB.h>
 #define PI 3.14159265f
-using namespace aa241x_low;
+//using namespace aa241x_low;
 
 /**
  * Main function in which your code should be written.
@@ -81,6 +81,7 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
     float radius = 10;
     float v_turn = 15;
     float v_straight = 12;
+    std::cout << "Before while loop\n";
     while (std::next_permutation(std::begin(idxs), std::end(idxs))) {
         std::vector<float> headings(N);
         std::vector<bool> turn_left(N);
@@ -160,6 +161,8 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
             float d_straight = sqrtf(powf(tgt_x - xmin, 2.0f) + powf(tgt_y - ymin, 2.0f));
             float t_turn = d_turn / v_turn;
             float t_straight = d_straight / v_straight;
+            headings.push_back(atan2f(vminx, vminy));
+            turn_left.push_back((mask_x <  0.0f));
             dist += d_turn;
             dist += d_straight;
             time += t_turn;
@@ -174,6 +177,8 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
             min_time = time;
             min_dist = dist;
             best_order = idxs;
+            best_headings = headings;
+            best_turn_left = turn_left;
         }
 
     }
@@ -181,9 +186,18 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
     targets_to_output.reserve(N);
     for (int i; i<N; i++) {
         target_s temp_target;
-        temp_target.heading_desired =
+        temp_target.heading_desired = best_headings[i];
+        temp_target.turnLeft = best_turn_left[i];
+        temp_target.pos_E = tgt_x_list[best_order[i]];
+        temp_target.pos_N = tgt_y_list[best_order[i]];
+        temp_target.radius = 10.0f;
+        targets_to_output.push_back(temp_target);
+        std::cout << "Heading " << i << ": " << best_headings[i] << "\n";
+        std::cout << "Turn Left " << i << ": " << best_turn_left[i] << "\n";
+        std::cout << "East Pos " << i << ": " << tgt_x_list[best_order[i]] << "\n";
+        std::cout << "North Pos " << i << ": " << tgt_y_list[best_order[i]] << "\n";
     }
-
+    return targets_to_output;
 
 }
 
@@ -224,7 +238,29 @@ void low_loop()
 	// float my_high_data = high_data.field1;
 
 	// setting low data value example
-	low_data.field1 = my_float_variable;
+	//low_data.field1 = my_float_variable;
 
 
+}
+
+ int main() {
+    std::vector<target_s> targets;
+    std::vector<float> tgt_x_list {-100.0f, 100.0f, 0.0f};
+    std::vector<float> tgt_y_list {100.0f, 100.0f, 200.0f};
+    float in_x = 0.0f;
+    float in_y = 0.0f;
+    float in_v_x = 1.0f;
+    float in_v_y = 0.0f;
+    std::cout << "Calling Targets \n";
+    targets = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
+                               in_v_x, in_v_y);
+    for (int i; i<targets.size(); i++) {
+
+        std::cout << "Heading " << i << ": " << targets[i].heading_desired << "\n";
+        std::cout << "Turn Left " << i << ": " << targets[i].turnLeft << "\n";
+        std::cout << "East Pos " << i << ": " << targets[i].pos_E << "\n";
+        std::cout << "North Pos " << i << ": " << targets[i].pos_N << "\n";
+    }
+    std::cout.flush();
+    return targets.size();
 }
