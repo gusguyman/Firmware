@@ -1,3 +1,36 @@
+/****************************************************************************
+ *
+ *   Copyright (c) 2013, 2014 PX4 Development Team. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ * 3. Neither the name PX4 nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ ****************************************************************************/
+
 /**
  * @file aa241x_fw_control_main.cpp
  *
@@ -60,7 +93,6 @@
 
 #include "aa241x_high_params.h"
 #include "aa241x_high_aux.h"
-#include "aa241x_high_control_law.cpp"
 
 #include <matrix/math.hpp>
 
@@ -612,25 +644,6 @@ FixedwingControl::low_data_poll()
 void
 FixedwingControl::publish_high_data()
 {
-
-    aa241x_high_data_s high_data;
-    high_data.field1 = data_to_log.field1;
-    high_data.field2 = data_to_log.field2;
-    high_data.field3 = data_to_log.field3;
-    high_data.field4 = data_to_log.field4;
-    high_data.field5 = data_to_log.field5;
-    high_data.field6 = data_to_log.field6;
-    high_data.field7 = data_to_log.field7;
-    high_data.field8 = data_to_log.field8;
-    high_data.field9 = data_to_log.field9;
-    high_data.field10 = data_to_log.field10;
-    high_data.field11 = data_to_log.field11;
-    high_data.field12 = data_to_log.field12;
-    high_data.field13 = data_to_log.field13;
-    high_data.field14 = data_to_log.field14;
-    high_data.field15 = data_to_log.field15;
-    high_data.field16 = data_to_log.field16;
-
 	/* publish the high priority loop data */
 	if (_high_data_pub != nullptr) {
 		orb_publish(ORB_ID(aa241x_high_data), _high_data_pub, &high_data);
@@ -992,9 +1005,18 @@ FixedwingControl::task_main()
 			// set all the variables needed for the control law
 			set_aux_values();
 
-			if (_vcontrol_mode.flag_control_auto_enabled) {
 
+			if (_vehicle_status.rc_signal_lost) {
+			  	roll_servo_out      = roll_trim;
+			  	pitch_servo_out     = pitch_trim;
+			  	yaw_servo_out       = yaw_trim + 0.5f;
+			  	throttle_servo_out  = 0.0f;
 
+			  	set_actuators();
+
+			}else if (_vcontrol_mode.flag_control_auto_enabled) {
+
+				
 
 				// TODO: potentially add stabilize and other modes back in....
 				/* run the custom control law */
@@ -1016,7 +1038,7 @@ FixedwingControl::task_main()
 				_att_sp.thrust = (isfinite(throttle_desired)) ? throttle_desired : 0.0f;
 
 
-			} else {
+			} else { 
 				// forward through manual values
 			  	roll_servo_out      = man_roll_in;
 			  	pitch_servo_out     = man_pitch_in;

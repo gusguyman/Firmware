@@ -62,6 +62,7 @@ logger_s data_to_log;
 std::vector<float> lat_vals(3);
 std::vector<float> lon_vals(3);
 int target_idx = 0;
+float target_yaw = 0.0f;
 bool new_targets = false;
 std::vector<target_s> target_list;
 void low_loop();
@@ -69,11 +70,11 @@ void low_loop();
 bool first_run = true;
 
 bool switch_case(){
-    return (autopilot == 0)
+    return (autopilot == 0);
 }
 
 bool turn_is_complete(float ep) {
-    float diff = abs(yaw - yaw_desired);
+    float diff = abs(yaw - target_yaw);
     return (diff < ep);
 }
 
@@ -154,7 +155,7 @@ void flight_control() {
 	    target_s target2;
 	    target_s target3;
 
-	    target1.heading_desired = -2.355f;
+	    target1.yaw = 0.5f;
 	    target1.turnLeft = true;
 	    target1.pos_E = 1944.0f; //CHANGE THIS!
 	    target1.pos_N = -2400.0f; //CHANGE THIS!
@@ -162,14 +163,14 @@ void flight_control() {
 	    target_list.push_back(target1);
 
 
-	    target2.heading_desired = 0.0f;
-	    target2.turnLeft = true;
+	    target2.yaw = 0.0f;
+	    target2.turnLeft = false;
 	    target2.pos_E = 1944.0f; //CHANGE THIS!
 	    target2.pos_N = -2200.0f; //CHANGE THIS!
         target2.radius = 10.0f;
 	    target_list.push_back(target2);
 
-	    target3.heading_desired = 0.785f;
+	    target3.yaw = 0.785;
 	    target3.turnLeft = true;
 	    target3.pos_E = 1800.0f; //CHANGE THIS!
 	    target3.pos_N = -2200.0f; //CHANGE THIS!
@@ -191,15 +192,15 @@ void flight_control() {
         mazController.SetPosInit(position_N, position_E);
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
-	}
+    }
 
 	//Set Default Outputs to manual;
-	output_s outputs;
-	outputs.pitch = man_pitch_in;
-	outputs.roll = man_roll_in;
-	outputs.yaw = man_yaw_in;
-	outputs.throttle = man_throttle_in;
-	outputs.rollForHeading = man_roll_in;
+    output_s outputs;
+    outputs.pitch = man_pitch_in;
+    outputs.roll = man_roll_in;
+    outputs.yaw = man_yaw_in;
+    outputs.throttle = man_throttle_in;
+    outputs.rollForHeading = man_roll_in;
 
     if(new_targets) {
         target_idx = 0;
@@ -208,11 +209,11 @@ void flight_control() {
         flight_mode = target_list[target_idx].turnLeft ? \
             mazController.turn_left() : \
             mazController.turn_right();
-            yaw_desired = target_list[target_idx].heading_desired;
+        target_yaw = target_list[target_idx].yaw;
 
     } else {
         if (turning()) {
-            if (turn_is_complete(0.05f)) {
+            if (turn_is_complete(0.15f)) {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
@@ -228,14 +229,14 @@ void flight_control() {
                     yaw_desired = yaw;
                     roll_desired = 0;
                     pitch_desired = 0;
-                    velocity_desired = 0;
+                    velocity_desired = 15.0f;
                     altitude_desired = position_D_baro;
                     current_command = 1;
                 } else {
                     flight_mode = target_list[target_idx].turnLeft ? \
                         mazController.turn_left() : \
                         mazController.turn_right();
-                        yaw_desired = target_list[target_idx].heading_desired;
+                    target_yaw = target_list[target_idx].yaw;
                     current_command = 0;
                 }
             } else {
@@ -246,8 +247,8 @@ void flight_control() {
     if (switch_case()) {
         flight_mode = aah_parameters.flight_mode;
     }
-
-	UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
+    
+    UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
 
     mazController.Controller(flight_mode, outputs, \
                              roll_s, \

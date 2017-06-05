@@ -535,24 +535,6 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 12: //turn left
         _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
-        _Roll.SetDesired(1.047f);
-        _Roll.SetCurrentValue(in_roll.current);
-        _Roll.PID_Update();
-        r_outputs.roll = _Roll.GetOutput();
-        _data_to_log.field2 = in_roll.desired;
-
-
-        _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(15.0f);
-        _Vel.SetCurrentValue(in_vel.current);
-        _Vel.SetBounds(0.0f, 1.0f);
-        _Vel.PID_Update();
-        r_outputs.throttle = _Vel.GetOutput();
-        _data_to_log.field5 = in_vel.desired;
-    case 13: // anyone superstitious?
-        break;
-    case 14: //turn right
-        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
         _Roll.SetDesired(-1.047f);
         _Roll.SetCurrentValue(in_roll.current);
         _Roll.PID_Update();
@@ -567,6 +549,30 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
+
+        r_outputs.pitch = -1.0f;
+        r_outputs.yaw = -0.25f;
+        break;
+    case 13: // anyone superstitious?
+        break;
+    case 14: //turn right
+        _Roll.SetGains(in_roll.kp, in_roll.kd, in_roll.ki);
+        _Roll.SetDesired(1.047f);
+        _Roll.SetCurrentValue(in_roll.current);
+        _Roll.PID_Update();
+        r_outputs.roll = _Roll.GetOutput();
+        _data_to_log.field2 = in_roll.desired;
+
+
+        _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
+        _Vel.SetDesired(15.0f);
+        _Vel.SetCurrentValue(in_vel.current);
+        _Vel.SetBounds(0.0f, 1.0f);
+        _Vel.PID_Update();
+        r_outputs.throttle = _Vel.GetOutput();
+        _data_to_log.field5 = in_vel.desired;
+        r_outputs.pitch = -1.5f;
+        r_outputs.yaw = 0.25f;
         break;
     case 15: // follow line
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);

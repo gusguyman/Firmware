@@ -70,12 +70,14 @@ struct target_s {
     float pos_E;
     float radius;
     bool turnLeft;
-    float heading_desired;
+    float yaw;
 };
 
 extern std::vector<target_s> target_list;
 //target_list.reserve(5);
 extern bool new_targets;
+extern bool first_run;
 extern int target_idx;
+extern float target_yaw;
 
 #endif /* AA241X_FW_CONTROL_MAIN_H_ */
