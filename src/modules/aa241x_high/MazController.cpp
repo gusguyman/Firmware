@@ -571,7 +571,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        r_outputs.pitch = -1.5f;
+        r_outputs.pitch = -1.0f;
         r_outputs.yaw = 0.25f;
         break;
     case 15: // follow line

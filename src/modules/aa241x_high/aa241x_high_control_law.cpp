@@ -213,7 +213,7 @@ void flight_control() {
 
     } else {
         if (turning()) {
-            if (turn_is_complete(0.15f)) {
+            if (abs(yaw-target_yaw) < 0.1f) {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
