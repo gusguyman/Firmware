@@ -106,10 +106,6 @@ void MazController::SetPos(float in_cur_N, float in_cur_E) {
     _cur_N = in_cur_N;
 }
 
-void MazController::SetYaw(float in_yaw_target) {
-	_yaw_target = in_yaw_target;
-}
-
 float MazController::wrapToPi(float angle) {
 	if (angle <= -PI || angle > PI) {
 		float f = floor( (angle + PI) / (2.0f*PI) );
@@ -117,6 +113,10 @@ float MazController::wrapToPi(float angle) {
 	} else {
 		return angle;
 	}
+}
+
+void MazController::SetYaw(float target_posE, float target_posN, float posE, float posN) {
+	_yaw_target = wrapToPi(PI - atanf((target_posE - posE)/(target_posN - posN)));
 }
 
 void MazController::Controller(int flight_mode, output_s & r_outputs, \

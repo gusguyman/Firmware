@@ -235,7 +235,7 @@ void flight_control() {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
-                mazController.SetYaw(PI - atanf((target_list[target_idx].pos_E - position_E)/(target_list[target_idx].pos_N - position_N)));
+                mazController.SetYaw(target_list[target_idx].pos_E, target_list[target_idx].pos_N, position_E, position_N);
                 flight_mode = mazController.follow_line();
                 //SET desired target if needed
             } else {
