@@ -129,7 +129,7 @@ void UpdateInputs(in_state_s & in_roll, \
     in_alt.kp = aah_parameters.proportional_altitude_gain;
     in_alt.kd = aah_parameters.derivative_altitude_gain;
     in_alt.ki = aah_parameters.integrator_altitude_gain;
-    in_alt.current = position_D_baro;
+    in_alt.current = position_D_gps;
     in_alt.desired = altitude_desired;
 
     in_heading.kp = aah_parameters.proportional_heading_gain;
@@ -156,33 +156,32 @@ void flight_control() {
 	    target_s target3;
 
 	    //target1.yaw = 0.5f;
+	    //target1.pos_E = 1944.0f; //Known point in Coyote Hill
+	    //target1.pos_N = -2400.0f; //Known point in Coyote Hill
         target1.yaw = 0.0f;
 	    target1.turnLeft = true;
-	    //target1.pos_E = 1944.0f; //CHANGE THIS!
-	    //target1.pos_N = -2400.0f; //CHANGE THIS!
-        target1.pos_E = position_E; //CHANGE THIS!
-        target1.pos_N = position_N + 5.0f; //CHANGE THIS!
+        target1.pos_E = position_E; 
+        target1.pos_N = position_N + 5.0f; 
         target1.radius = 1.5f;
 	    target_list.push_back(target1);
 
-
 	    //target2.yaw = 0.0f;
+	    //target2.pos_E = 1944.0f; //Known point in Coyote Hill
+	    //target2.pos_N = -2200.0f; //Known point in Coyote Hill
         target2.yaw = 0.57f;
 	    target2.turnLeft = true;
-	    //target2.pos_E = 1944.0f; //CHANGE THIS!
-	    //target2.pos_N = -2200.0f; //CHANGE THIS!
-        target2.pos_E = position_E - 5.0f;; //CHANGE THIS!
-        target2.pos_N = position_N + 5.0f; //CHANGE THIS!
+        target2.pos_E = position_E - 5.0f;
+        target2.pos_N = position_N + 5.0f; 
         target2.radius = 1.5f;
 	    target_list.push_back(target2);
 
 	    //target3.yaw = 0.785;
+	    //target3.pos_E = 1800.0f; //Known point in Coyote Hill
+	    //target3.pos_N = -2200.0f; //Known point in Coyote Hill
         target3.yaw = -2.5f;
 	    target3.turnLeft = true;
-	    //target3.pos_E = 1800.0f; //CHANGE THIS!
-	    //target3.pos_N = -2200.0f; //CHANGE THIS!
-        target3.pos_E = position_E; //CHANGE THIS!
-        target3.pos_N = position_N; //CHANGE THIS!
+        target3.pos_E = position_E;
+        target3.pos_N = position_N;
         target3.radius = 1.5f;
 	    target_list.push_back(target3);
 
@@ -196,7 +195,7 @@ void flight_control() {
         pitch_desired = pitch;
         velocity_desired = speed_body_u;
         heading_desired = ground_course;
-        altitude_desired = position_D_baro;
+        altitude_desired = position_D_gps;
         rollForHeading_desired = roll;
         mazController.SetPosInit(position_N, position_E);
          							// yaw_desired already defined in aa241x_high_aux.h
@@ -226,6 +225,7 @@ void flight_control() {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
+                mazController.SetYaw(target_list[target_idx].yaw);
                 flight_mode = mazController.follow_line();
                 //SET desired target if needed
             } else {
@@ -239,12 +239,13 @@ void flight_control() {
                     roll_desired = 0;
                     pitch_desired = 0;
                     velocity_desired = 15.0f;
-                    altitude_desired = position_D_baro;
+                    altitude_desired = position_D_gps;
                     current_command = 1;
                 } else {
                     flight_mode = target_list[target_idx].turnLeft ? \
                         mazController.turn_left() : \
                         mazController.turn_right();
+
                     target_yaw = target_list[target_idx].yaw;
                     current_command = 0;
                 }

@@ -16,6 +16,7 @@ MazController::MazController()
     _prev_goal_E = 0.0f;
     _cur_E = 0.0f;
     _cur_N = 0.0f;
+    _yaw_target = 0.0f;
     _data_to_log.field1 = 0.0f; // Flight mode
     _data_to_log.field2 = 0.0f; // Roll desired
     _data_to_log.field3 = 0.0f; // Pitch desired
@@ -103,6 +104,10 @@ void MazController::SetPosInit(float in_cur_N, float in_cur_E) {
 void MazController::SetPos(float in_cur_N, float in_cur_E) {
     _cur_E = in_cur_E;
     _cur_N = in_cur_N;
+}
+
+void MazController::SetYaw(float in_yaw_target) {
+	_yaw_target = in_yaw_target;
 }
 
 void MazController::Controller(int flight_mode, output_s & r_outputs, \
@@ -194,7 +199,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Heading.PID_Update();
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);// + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -229,7 +234,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);// + (in_yaw.desired - in_heading.desired));
+        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -576,7 +581,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     case 15: // follow line
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(15.0f);   //ARE WE SETTING V TO 15 M/S IN A STRAIGHT LINE ??
+        _Vel.SetDesired(15.0f);   
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
@@ -596,7 +601,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_Heading.GetOutput() + in_yaw.desired);
+        _Yaw.SetDesired(0.7f*atanf(_Heading.GetOutput()) + _yaw_target); 
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -618,7 +623,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         } else {
             current = in_alt.current;
         }
-        _Alt.SetDesired(in_alt.desired);  //SET A FIXED ALTITUDE DESIRED HERE
+        _Alt.SetDesired(100.0f);  
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
 
