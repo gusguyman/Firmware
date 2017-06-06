@@ -61,7 +61,7 @@ bool going_straight() ;
 
 void low_loop();
 
-bool switch_case();
+bool autopilot_is_on();
 
 struct target_s {
     float lat;

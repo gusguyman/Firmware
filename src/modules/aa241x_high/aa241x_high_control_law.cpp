@@ -69,8 +69,8 @@ void low_loop();
 
 bool first_run = true;
 
-bool switch_case(){
-    return (autopilot == 0);
+bool autopilot_is_on(){
+    return (aah_parameters.autopilot == 0);
 }
 
 bool turn_is_complete(float ep) {
@@ -256,7 +256,7 @@ void flight_control() {
     if (!use_targets) {
         flight_mode = aah_parameters.flight_mode;
     }
-    
+
     UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
 
     mazController.Controller(flight_mode, outputs, \
