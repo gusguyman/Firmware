@@ -110,6 +110,15 @@ void MazController::SetYaw(float in_yaw_target) {
 	_yaw_target = in_yaw_target;
 }
 
+float MazController::wrapToPi(float angle) {
+	if (angle <= -PI || angle > PI) {
+		float f = floor( (angle + PI) / (2.0f*PI) );
+		return angle - 2.0f*PI*f; 
+	} else {
+		return angle;
+	}
+}
+
 void MazController::Controller(int flight_mode, output_s & r_outputs, \
                          const in_state_s & in_roll, \
                          const in_state_s & in_pitch, \
@@ -623,7 +632,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         } else {
             current = in_alt.current;
         }
-        _Alt.SetDesired(100.0f);  
+        _Alt.SetDesired(140.0f);  
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
 

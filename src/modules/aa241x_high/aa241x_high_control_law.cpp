@@ -42,6 +42,8 @@ float heading_desired = 0.0f;
 
 int current_command = 0;
 
+const float PI = 3.1415927;
+
 
 /**
  * Main function in which your code should be written.
@@ -233,7 +235,7 @@ void flight_control() {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
-                mazController.SetYaw(target_list[target_idx].yaw);
+                mazController.SetYaw(PI - atanf((target_list[target_idx].pos_E - position_E)/(target_list[target_idx].pos_N - position_N)));
                 flight_mode = mazController.follow_line();
                 //SET desired target if needed
             } else {

@@ -68,6 +68,7 @@ class MazController
         void SetGoal(float in_goal_N, float in_goal_E);
         void SetPosInit(float in_cur_N, float in_cur_E);
         void SetYaw(float target_yaw);
+        float wrapToPi(float angle);
         void GetLogData(logger_s & in_log);
         int turn_left() {return 12;}
         int turn_right() {return 14;}
