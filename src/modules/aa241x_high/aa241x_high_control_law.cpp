@@ -151,9 +151,17 @@ bool use_targets = true;
 void flight_control() {
 	if (first_run) {
 	    target_list.reserve(5);
+	    target_s target0;
 	    target_s target1;
 	    target_s target2;
 	    target_s target3;
+
+	    target0.yaw = 0.0f;
+	    target0.turnLeft = true;
+        target0.pos_E = position_E; 
+        target0.pos_N = position_N; 
+        target0.radius = 1.5f;
+	    target_list.push_back(target0);
 
 	    //target1.yaw = 0.5f;
 	    //target1.pos_E = 1944.0f; //Known point in Coyote Hill
@@ -211,7 +219,7 @@ void flight_control() {
     outputs.rollForHeading = man_roll_in;
 
     if(new_targets) {
-        target_idx = 0;
+        target_idx = 1;
         new_targets = false;
         current_command = 0;
         flight_mode = target_list[target_idx].turnLeft ? \
@@ -245,12 +253,30 @@ void flight_control() {
                     flight_mode = target_list[target_idx].turnLeft ? \
                         mazController.turn_left() : \
                         mazController.turn_right();
-
                     target_yaw = target_list[target_idx].yaw;
                     current_command = 0;
                 }
             } else {
                 mazController.SetPos(position_N, position_E);
+                //Test if we missed target
+                if ( (position_N - target_list[target_idx].pos_N)*(target_list[target_idx].pos_N - target_list[target_idx-1].pos_N) + \
+                     (position_E - target_list[target_idx].pos_E)*(target_list[target_idx].pos_E - target_list[target_idx-1].pos_E)  > 0.0f ) { //we missed target, skip it
+                	target_idx ++;
+                	if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
+                    	yaw_desired = yaw;
+                    	roll_desired = 0;
+                    	pitch_desired = 0;
+                    	velocity_desired = 15.0f;
+                    	altitude_desired = position_D_gps;
+                    	current_command = 1;
+                    } else {
+                    	flight_mode = target_list[target_idx].turnLeft ? \
+                        	mazController.turn_left() : \
+                        	mazController.turn_right();
+                    	target_yaw = target_list[target_idx].yaw;
+                    	current_command = 0;
+                    }
+                }
             }
         }
     }
