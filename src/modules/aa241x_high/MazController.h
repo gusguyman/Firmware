@@ -2,6 +2,7 @@
 #define MAZCONTROLLER_H
 
 #include "principal_axis_c.h"
+#include <math.h>
 
 struct output_s {
     float roll;

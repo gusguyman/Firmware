@@ -116,7 +116,7 @@ float MazController::wrapToPi(float angle) {
 }
 
 void MazController::SetYaw(float target_posE, float target_posN, float posE, float posN) {
-	_yaw_target = wrapToPi(PI - atan2f((target_posE - posE),(target_posN - posN)));
+	_yaw_target = wrapToPi(atan2f((target_posE - posE),(target_posN - posN)));
 }
 
 void MazController::Controller(int flight_mode, output_s & r_outputs, \
@@ -415,7 +415,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (std::fabs(in_alt.desired - in_alt.current) < 1.00f) {
+        if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
@@ -472,7 +472,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (std::fabs(in_alt.desired - in_alt.current) < 1.0f) {
+        if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
@@ -627,7 +627,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (std::fabs(in_alt.desired - in_alt.current) < 1.0f) {
+        if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
