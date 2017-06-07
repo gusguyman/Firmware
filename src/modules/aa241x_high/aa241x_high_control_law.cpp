@@ -76,12 +76,13 @@ bool autopilot_is_off(){
 }
 
 bool turn_is_complete(float ep) {
-    float diff = abs(yaw - target_yaw);
+    float diff = std::fabs(yaw - target_yaw);
     return (diff < ep);
+
 }
 
 bool straight_is_complete(float ep) {
-    float dist = sqrt(pow(position_N - target_list[target_idx].pos_N, 2) + \
+    float dist = sqrtf(pow(position_N - target_list[target_idx].pos_N, 2) + \
                       pow(position_E - target_list[target_idx].pos_E,2));
     return (dist < ep);
 }
@@ -153,6 +154,7 @@ bool use_targets = true;
 void flight_control() {
 	if (first_run) {
 	    target_list.reserve(5);
+	    target_list.clear();
 	    target_s target0;
 	    target_s target1;
 	    target_s target2;
@@ -208,6 +210,7 @@ void flight_control() {
         altitude_desired = position_D_gps;
         rollForHeading_desired = roll;
         mazController.SetPosInit(position_N, position_E);
+        first_run = true;
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
     }
