@@ -160,8 +160,8 @@ void flight_control() {
 
 	    target0.yaw = 0.0f;
 	    target0.turnLeft = true;
-        target0.pos_E = position_E; 
-        target0.pos_N = position_N; 
+        target0.pos_E = position_E;
+        target0.pos_N = position_N;
         target0.radius = 1.5f;
 	    target_list.push_back(target0);
 
@@ -170,8 +170,8 @@ void flight_control() {
 	    //target1.pos_N = -2400.0f; //Known point in Coyote Hill
         target1.yaw = 0.0f;
 	    target1.turnLeft = true;
-        target1.pos_E = position_E; 
-        target1.pos_N = position_N + 5.0f; 
+        target1.pos_E = position_E;
+        target1.pos_N = position_N + 5.0f;
         target1.radius = 1.5f;
 	    target_list.push_back(target1);
 
@@ -181,7 +181,7 @@ void flight_control() {
         target2.yaw = 0.57f;
 	    target2.turnLeft = true;
         target2.pos_E = position_E - 5.0f;
-        target2.pos_N = position_N + 5.0f; 
+        target2.pos_N = position_N + 5.0f;
         target2.radius = 1.5f;
 	    target_list.push_back(target2);
 
@@ -282,7 +282,7 @@ void flight_control() {
             }
         }
     }
-    if (!use_targets) {
+    if (autopilot_is_on()) {
         flight_mode = aah_parameters.flight_mode;
     }
 
@@ -299,7 +299,7 @@ void flight_control() {
                              );
 
     mazController.GetLogData(data_to_log);
-
+    data_to_log.field16 = target_idx;
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
