@@ -44,11 +44,11 @@
 
 // include header file
 #include "aa241x_low_control_law.h"
-//#include "aa241x_low_aux.h"
+#include "aa241x_low_aux.h"
 
-//#include <uORB/uORB.h>
+#include <uORB/uORB.h>
 #define PI 3.14159265f
-//using namespace aa241x_low;
+using namespace aa241x_low;
 
 /**
  * Main function in which your code should be written.
@@ -65,35 +65,38 @@ std::vector<float> lon_vals(3);
 int target_idx = 0;
 bool new_targets = false;
 std::vector<target_s> target_list;
+bool run_path_planner = false;
 
 //target_list.reserve(5);
 
 std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<float> tgt_y_list, float in_x, float in_y, \
                                float in_v_x, float in_v_y) {
-    int N = lat_vals.size();
+    int N = tgt_x_list.size();
     std::vector<int> idxs(N);
     std::iota(std::begin(idxs), std::end(idxs), 0);
     float min_time = INFINITY;
-    float min_dist = 0;
+//    float min_dist = 0;
     std::vector<int> best_order(N);
     std::vector<float> best_headings(N);
     std::vector<bool> best_turn_left(N);
     float radius = 10;
-    float v_turn = 15;
-    float v_straight = 12;
-    std::cout << "Before while loop\n";
-    while (std::next_permutation(std::begin(idxs), std::end(idxs))) {
+    float v_turn = 12;
+    float v_straight = 15;
+//    std::cout << "Before while loop\n";
+    do {
         std::vector<float> headings(N);
         std::vector<bool> turn_left(N);
-        float dist = 0;
+//        float dist = 0;
         float time = 0;
         float start_x = in_x;
         float start_y = in_y;
         float start_v_x = in_v_x;
         float start_v_y = in_v_y;
-        for (int i; i<N; i++) {
-            float tgt_x = tgt_x_list[i];
-            float tgt_y = tgt_y_list[i];
+//        std::cout << "Order: ";
+        for (int i = 0; i<N; i++) {
+//            std::cout << idxs[i] << " ";
+            float tgt_x = tgt_x_list[idxs[i]];
+            float tgt_y = tgt_y_list[idxs[i]];
             float v_tgt_x = tgt_x - start_x;
             float v_tgt_y = tgt_y - start_y;
             float norm_dist = (start_v_x * v_tgt_x + start_v_y * v_tgt_y) / (powf(start_v_x, 2.0f) + powf(start_v_y, 2.0f));
@@ -103,21 +106,20 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
             float v_int_y = tgt_y - int_y;
             float mask_x;
             float mask_y;
-            if (int(start_v_x) != 0) {
-                mask_x = (v_int_x / start_v_x < 0) ? -1.0f : 1.0f;
+            if ((int)std::ceil(std::abs(start_v_y)) != 0 && (int)std::ceil(std::abs(v_int_x)) != 0) {
+                mask_x = (v_int_x / start_v_y < 0) ? -1.0f : 1.0f;
             } else {
-                mask_x = (v_int_y < 0) ? 1.0f : -1.0f;
+                mask_x = (v_int_x < 0) ? 1.0f : -1.0f;
             }
-            if (int(start_v_y) != 0) {
-                mask_y = (v_int_y / start_v_y < 0) ? -1.0f : 1.0f;
+            if ((int)std::ceil(std::abs(start_v_x)) != 0 && (int)std::ceil(std::abs(v_int_y)) != 0) {
+                mask_y = (v_int_y / start_v_x < 0) ? -1.0f : 1.0f;
             } else {
-                mask_y = (v_int_x < 0) ? 1.0f : -1.0f;
+                mask_y = (v_int_y < 0) ? 1.0f : -1.0f;
             }
             float vxc = start_v_y * mask_x;
             float vyc = start_v_x * mask_y;
             float xc = start_x + radius * vxc / sqrtf(powf(vxc, 2.0f) + powf(vyc, 2.0f));
             float yc = start_y + radius * vyc / sqrtf(powf(vxc, 2.0f) + powf(vyc, 2.0f));
-
             float xd = tgt_x - xc;
             float yd = tgt_y - yc;
             //roots to find k
@@ -138,7 +140,7 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
             float x1 = -b1 / (2.0f * a1);
             float x2 = -b2 / (2.0f * a2);
             float y1 = k1 * (x1 - tgt_x) + tgt_y;
-            float y2 = k1 * (x1 - tgt_x) + tgt_y;
+            float y2 = k2 * (x2 - tgt_x) + tgt_y;
 
             float v1x = tgt_x - x1;
             float v2x = tgt_x - x2;
@@ -148,8 +150,10 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
             float ang1raw = atan2f (y1 - yc,x1 - xc) * 180.0f / PI;
             float ang2raw = atan2f (y2 - yc,x2 - xc) * 180.0f / PI;
             float angstart = atan2f (start_y - yc,start_x - xc) * 180.0f / PI;
-            float ang1 = fmodf((angstart*mask_x + ang1raw*mask_y), 360.0f);
-            float ang2 = fmodf((angstart*mask_x + ang2raw*mask_y), 360.0f);
+            float ang1 = (angstart*mask_x + ang1raw*mask_y);
+            float ang2 = (angstart*mask_x + ang2raw*mask_y);
+            ang1 = (ang1 < 0.0f) ? ang1 + 360.0f : ang1;
+            ang2 = (ang2 < 0.0f) ? ang2 + 360.0f : ang2;
 
             float angmin = (ang1 < ang2) ? ang1 : ang2;
             float xmin = (ang1 < ang2) ? x1 : x2;
@@ -161,10 +165,10 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
             float d_straight = sqrtf(powf(tgt_x - xmin, 2.0f) + powf(tgt_y - ymin, 2.0f));
             float t_turn = d_turn / v_turn;
             float t_straight = d_straight / v_straight;
-            headings.push_back(atan2f(vminx, vminy));
-            turn_left.push_back((mask_x <  0.0f));
-            dist += d_turn;
-            dist += d_straight;
+            headings[i] = atan2f(vminx, vminy);
+            turn_left[i] = ((mask_x <  0.0f));
+//            dist += d_turn;
+//            dist += d_straight;
             time += t_turn;
             time += t_straight;
             start_x = tgt_x;
@@ -175,16 +179,17 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
         }
         if (time < min_time) {
             min_time = time;
-            min_dist = dist;
+//            min_dist = dist;
             best_order = idxs;
             best_headings = headings;
             best_turn_left = turn_left;
         }
+//        std::cout << "\n";
 
-    }
+    } while (std::next_permutation(std::begin(idxs), std::end(idxs))) ;
     std::vector<target_s> targets_to_output;
     targets_to_output.reserve(N);
-    for (int i; i<N; i++) {
+    for (int i = 0; i<N; i++) {
         target_s temp_target;
         temp_target.heading_desired = best_headings[i];
         temp_target.turnLeft = best_turn_left[i];
@@ -192,11 +197,16 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
         temp_target.pos_N = tgt_y_list[best_order[i]];
         temp_target.radius = 10.0f;
         targets_to_output.push_back(temp_target);
-        std::cout << "Heading " << i << ": " << best_headings[i] << "\n";
-        std::cout << "Turn Left " << i << ": " << best_turn_left[i] << "\n";
-        std::cout << "East Pos " << i << ": " << tgt_x_list[best_order[i]] << "\n";
-        std::cout << "North Pos " << i << ": " << tgt_y_list[best_order[i]] << "\n";
+//        std::cout << "Heading " << i << ": " << best_headings[i] << "\n";
+//        std::cout << "Turn Left " << i << ": " << best_turn_left[i] << "\n";
+//        std::cout << "East Pos " << i << ": " << tgt_x_list[best_order[i]] << "\n";
+//        std::cout << "North Pos " << i << ": " << tgt_y_list[best_order[i]] << "\n";
     }
+//    std::cout << "Best Order: ";
+//    for (int i = 0; i<N; i++) {
+//        std::cout << best_order[i] << " ";
+//    }
+//    std::cout << "\nBest Time: " << min_time << "\nBest Distance " << min_dist << "\n" ;
     return targets_to_output;
 
 }
@@ -205,7 +215,7 @@ bool first_run = true;
 void low_loop()
 {
 
-	float my_float_variable = 0.0f;		/**< example float variable */
+//	float my_float_variable = 0.0f;		/**< example float variable */
     if (first_run) {
         target_list.reserve(5);
         target_s target1;
@@ -232,6 +242,21 @@ void low_loop()
 
         first_run = false;
         new_targets = true;
+        run_path_planner = false;
+    }
+    if (run_path_planner) {
+        std::vector<target_s> targets;
+        std::vector<float> tgt_x_list {-100.0f, 100.0f, 0.0f, 75.0f, -80.0f};
+        std::vector<float> tgt_y_list {100.0f, 100.0f, 200.0f, 150.0f, 50.0f};
+        float in_x = 0.0f;
+        float in_y = 0.0f;
+        float in_v_x = 1.0f;
+        float in_v_y = 0.0f;
+    //    std::cout << "Calling Targets \n";
+        targets = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
+                                   in_v_x, in_v_y);
+        new_targets = true;
+        run_path_planner = false;
     }
 
 	// getting high data value example
@@ -243,24 +268,16 @@ void low_loop()
 
 }
 
- int main() {
-    std::vector<target_s> targets;
-    std::vector<float> tgt_x_list {-100.0f, 100.0f, 0.0f};
-    std::vector<float> tgt_y_list {100.0f, 100.0f, 200.0f};
-    float in_x = 0.0f;
-    float in_y = 0.0f;
-    float in_v_x = 1.0f;
-    float in_v_y = 0.0f;
-    std::cout << "Calling Targets \n";
-    targets = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
-                               in_v_x, in_v_y);
-    for (int i; i<targets.size(); i++) {
-
-        std::cout << "Heading " << i << ": " << targets[i].heading_desired << "\n";
-        std::cout << "Turn Left " << i << ": " << targets[i].turnLeft << "\n";
-        std::cout << "East Pos " << i << ": " << targets[i].pos_E << "\n";
-        std::cout << "North Pos " << i << ": " << targets[i].pos_N << "\n";
-    }
-    std::cout.flush();
-    return targets.size();
-}
+// int main() {
+///*
+//    for (int i; i<targets.size(); i++) {
+//
+//        std::cout << "Heading " << i << ": " << targets[i].heading_desired << "\n";
+//        std::cout << "Turn Left " << i << ": " << targets[i].turnLeft << "\n";
+//        std::cout << "East Pos " << i << ": " << targets[i].pos_E << "\n";
+//        std::cout << "North Pos " << i << ": " << targets[i].pos_N << "\n";
+//    }
+//    std::cout.flush();
+//    */
+//    return targets.size();
+//}

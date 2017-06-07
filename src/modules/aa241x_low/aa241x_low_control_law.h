@@ -52,17 +52,19 @@
 #include <math.h>
 #include <poll.h>
 #include <time.h>
-//#include <drivers/drv_hrt.h>
-//#include <systemlib/err.h>
-//#include <geo/geo.h>
-//#include <systemlib/perf_counter.h>
-//#include <systemlib/systemlib.h>
-//#include <mathlib/mathlib.h>
+#include <drivers/drv_hrt.h>
+#include <systemlib/err.h>
+#include <geo/geo.h>
+#include <systemlib/perf_counter.h>
+#include <systemlib/systemlib.h>
+#include <mathlib/mathlib.h>
 #include <vector>
 #include <numeric>
 #include <algorithm>
-#include <iterator>
-#include <iostream>
+//#include <iterator>
+//#include <iostream>
+#include <cmath>
+//#include <iterator>
 /*
  * Declare variables here that you may want to access
  * in multiple different function.
@@ -85,6 +87,7 @@ extern std::vector<target_s> target_list;
 
 extern bool new_targets;
 extern int target_idx;
+extern bool run_path_planner;
 
 std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<float> tgt_y_list, float in_x, float in_y, \
                                float in_v_x, float in_v_y) ;
