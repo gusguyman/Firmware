@@ -71,7 +71,7 @@ void low_loop();
 
 bool first_run = true;
 
-bool autopilot_is_on(){
+bool autopilot_is_off(){
     return (aah_parameters.autopilot == 0);
 }
 
@@ -162,7 +162,7 @@ void flight_control() {
 	    target0.turnLeft = true;
         target0.pos_E = position_E; 
         target0.pos_N = position_N; 
-        target0.radius = 1.5f;
+        target0.radius = 10.0f;
 	    target_list.push_back(target0);
 
 	    //target1.yaw = 0.5f;
@@ -171,8 +171,8 @@ void flight_control() {
         target1.yaw = 0.0f;
 	    target1.turnLeft = true;
         target1.pos_E = position_E; 
-        target1.pos_N = position_N + 5.0f; 
-        target1.radius = 1.5f;
+        target1.pos_N = position_N + 50.0f; 
+        target1.radius = 10.0f;
 	    target_list.push_back(target1);
 
 	    //target2.yaw = 0.0f;
@@ -180,9 +180,9 @@ void flight_control() {
 	    //target2.pos_N = -2200.0f; //Known point in Coyote Hill
         target2.yaw = 0.57f;
 	    target2.turnLeft = true;
-        target2.pos_E = position_E - 5.0f;
-        target2.pos_N = position_N + 5.0f; 
-        target2.radius = 1.5f;
+        target2.pos_E = position_E - 50.0f;
+        target2.pos_N = position_N + 50.0f; 
+        target2.radius = 10.0f;
 	    target_list.push_back(target2);
 
 	    //target3.yaw = 0.785;
@@ -231,7 +231,7 @@ void flight_control() {
 
     } else {
         if (turning()) {
-            if (turn_is_complete(0.05f)) {
+            if (turn_is_complete(0.2f)) {
                 mazController.SetPosInit(position_N, position_E);
                 mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                 current_command = 1;
@@ -282,7 +282,7 @@ void flight_control() {
             }
         }
     }
-    if (!use_targets) {
+    if (autopilot_is_off()) {
         flight_mode = aah_parameters.flight_mode;
     }
 
