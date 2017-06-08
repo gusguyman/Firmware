@@ -3,6 +3,7 @@
 #include "aa241x_high_aux.h"
 #include <cstdlib>
 #include <cmath>
+#include <math.h>
 
 
 const float PI = 3.1415927;
@@ -415,7 +416,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (std::fabs(in_alt.desired - in_alt.current) < 1.00f) {
+        if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
@@ -472,7 +473,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (std::fabs(in_alt.desired - in_alt.current) < 1.0f) {
+        if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
@@ -627,7 +628,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
         _Alt.SetBounds(-0.5f, 0.5f);
 
-        if (std::fabs(in_alt.desired - in_alt.current) < 1.0f) {
+        if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
         } else {
             current = in_alt.current;
