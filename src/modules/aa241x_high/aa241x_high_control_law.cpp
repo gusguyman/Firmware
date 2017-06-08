@@ -227,9 +227,10 @@ void flight_control() {
     outputs.yaw = man_yaw_in;
     outputs.throttle = man_throttle_in;
     outputs.rollForHeading = man_roll_in;
-
+    bool temp;
     if(new_targets) {
         target_idx = 0;
+        temp = true;
         new_targets = false;
         current_command = 0;
         flight_mode = target_list[target_idx].turnLeft ? \
@@ -313,7 +314,8 @@ void flight_control() {
     mazController.GetLogData(data_to_log);
     data_to_log.field5 = speed_body_u;
     data_to_log.field16 = target_idx;
-    data_to_log.field15 = new_targets;
+    data_to_log.field15 = temp;
+    temp = false;
 /*
     if(run_path_planner) {
         yaw_servo_out = 1.0f;
