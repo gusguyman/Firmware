@@ -164,7 +164,7 @@ void flight_control() {
 	    target0.turnLeft = true;
         target0.pos_E = position_E;
         target0.pos_N = position_N;
-        target0.radius = 10.0f;
+        target0.radius = 2.5f;
 	    target_list.push_back(target0);
 
 	    //target1.yaw = 0.5f;
@@ -173,8 +173,8 @@ void flight_control() {
         target1.yaw = 0.0f;
 	    target1.turnLeft = true;
         target1.pos_E = position_E;
-        target1.pos_N = position_N + 50.0f;
-        target1.radius = 10.0f;
+        target1.pos_N = position_N + 7.0f;
+        target1.radius = 2.5f;
 	    target_list.push_back(target1);
 
 	    //target2.yaw = 0.0f;
@@ -182,9 +182,9 @@ void flight_control() {
 	    //target2.pos_N = -2200.0f; //Known point in Coyote Hill
         target2.yaw = 0.57f;
 	    target2.turnLeft = true;
-        target2.pos_E = position_E - 50.0f;
-        target2.pos_N = position_N + 50.0f;
-        target2.radius = 10.0f;
+        target2.pos_E = position_E - 7.0f;
+        target2.pos_N = position_N + 7.0f;
+        target2.radius = 2.5f;
 	    target_list.push_back(target2);
 
 	    //target3.yaw = 0.785;
@@ -194,7 +194,7 @@ void flight_control() {
 	    target3.turnLeft = true;
         target3.pos_E = position_E;
         target3.pos_N = position_N;
-        target3.radius = 1.5f;
+        target3.radius = 2.5f;
 	    target_list.push_back(target3);
 
 	    first_run = false;
