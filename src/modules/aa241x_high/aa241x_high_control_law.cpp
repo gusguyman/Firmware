@@ -207,7 +207,7 @@ void flight_control() {
         pitch_desired = pitch;
         velocity_desired = speed_body_u;
         heading_desired = ground_course;
-        altitude_desired = position_D_gps;
+        altitude_desired = aah_parameters.altitude_desired;
         rollForHeading_desired = roll;
         mazController.SetPosInit(position_N, position_E);
         first_run = true;
