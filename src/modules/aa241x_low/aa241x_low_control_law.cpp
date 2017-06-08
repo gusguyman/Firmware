@@ -195,7 +195,7 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
         temp_target.turnLeft = best_turn_left[i];
         temp_target.pos_E = tgt_x_list[best_order[i]];
         temp_target.pos_N = tgt_y_list[best_order[i]];
-        temp_target.radius = 10.0f;
+        temp_target.radius = plume_radius[best_order[i]];
         targets_to_output.push_back(temp_target);
 //        std::cout << "Heading " << i << ": " << best_headings[i] << "\n";
 //        std::cout << "Turn Left " << i << ": " << best_turn_left[i] << "\n";
@@ -210,13 +210,13 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
     return targets_to_output;
 
 }
-
+int32_t prev_phase = phase_num;
 bool first_run = true;
 void low_loop()
 {
 
 //	float my_float_variable = 0.0f;		/**< example float variable */
-    if (first_run) {
+ /*   if (first_run) {
         target_list.reserve(5);
         target_s target1;
         target_s target2;
@@ -257,8 +257,25 @@ void low_loop()
                                    in_v_x, in_v_y);
         new_targets = true;
         run_path_planner = false;
-    }
+    }*/
 
+    if (prev_phase != phase_num) { //New targets available
+        int j = 0;
+        std::vector<float> tgt_y_list;
+        std::vector<float> tgt_x_list;
+        while((int)std::ceil(std::abs(plume_N[j])) != 0) {
+            tgt_x_list.push_back(plume_E[j]);
+            tgt_y_list.push_back(plume_N[j]);
+            j++;
+        }
+        float in_x = position_E;
+        float in_y = position_N;
+        float in_v_x = std::sin(ground_course);
+        float in_v_y = std::cos(ground_course);
+        target_list = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
+                                   in_v_x, in_v_y);
+        new_targets = true;
+    }
 	// getting high data value example
 	// float my_high_data = high_data.field1;
 

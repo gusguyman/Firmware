@@ -561,7 +561,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
 
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
-        _Vel.SetDesired(15);
+        _Vel.SetDesired(15.0f);
         _Vel.SetCurrentValue(in_vel.current);
         _Vel.SetBounds(0.0f, 1.0f);
         _Vel.PID_Update();
