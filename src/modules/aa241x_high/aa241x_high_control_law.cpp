@@ -61,15 +61,15 @@ in_state_s heading_s;
 in_state_s rollForHeading_s;
 
 logger_s data_to_log;
-std::vector<float> lat_vals(3);
-std::vector<float> lon_vals(3);
-int target_idx = 0;
+//std::vector<float> lat_vals(3);
+//std::vector<float> lon_vals(3);
+//int target_idx = 0;
 float target_yaw = 0.0f;
-bool new_targets = false;
-std::vector<target_s> target_list;
+//bool new_targets = false;
+//std::vector<target_s> target_list;
 void low_loop();
 
-bool first_run = true;
+//bool first_run = true;
 
 bool autopilot_is_off(){
     return (aah_parameters.autopilot == 0);
@@ -152,7 +152,8 @@ MazController mazController;
 //mazController.GetLogData(data_to_log);
 bool use_targets = true;
 void flight_control() {
-	if (first_run) {
+    /*
+	if (false) {
 	    target_list.reserve(5);
 	    target_list.clear();
 	    target_s target0;
@@ -200,6 +201,8 @@ void flight_control() {
 	    first_run = false;
 	    new_targets = true;
 	}
+	*/
+
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
                                                                  //	should only occur on first engagement since this is 59Hz loop
         yaw_desired = yaw;
@@ -226,7 +229,7 @@ void flight_control() {
     outputs.rollForHeading = man_roll_in;
 
     if(new_targets) {
-        target_idx = 1;
+        target_idx = 0;
         new_targets = false;
         current_command = 0;
         flight_mode = target_list[target_idx].turnLeft ? \
@@ -234,7 +237,7 @@ void flight_control() {
             mazController.turn_right();
         target_yaw = target_list[target_idx].yaw;
 
-    } else {
+    } else if (!first_run) {
         if (turning()) {
             if (turn_is_complete(0.2f)) {
                 mazController.SetPosInit(position_N, position_E);
@@ -266,9 +269,11 @@ void flight_control() {
             } else {
                 mazController.SetPos(position_N, position_E);
                 //Test if we missed target
+                /*
                 if ( (position_N - target_list[target_idx].pos_N)*(target_list[target_idx].pos_N - target_list[target_idx-1].pos_N) + \
                      (position_E - target_list[target_idx].pos_E)*(target_list[target_idx].pos_E - target_list[target_idx-1].pos_E)  > 0.0f ) { //we missed target, skip it
                 	target_idx ++;
+                	*/
                 	if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
                     	yaw_desired = yaw;
                     	roll_desired = 0;
@@ -283,9 +288,11 @@ void flight_control() {
                     	target_yaw = target_list[target_idx].yaw;
                     	current_command = 0;
                     }
-                }
+                //}
             }
         }
+    } else {
+        //nthing
     }
     if (autopilot_is_off()) {
         flight_mode = aah_parameters.flight_mode;
@@ -324,5 +331,11 @@ void flight_control() {
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
     throttle_servo_out = outputs.throttle;
+    if (first_run) {
+        yaw_servo_out = -1.0f;
+        pitch_servo_out = -1.0f; // Negative for preferred control inversion
+        roll_servo_out = -1.0f;
+        throttle_servo_out = 0.0f;
+    }
 
 }

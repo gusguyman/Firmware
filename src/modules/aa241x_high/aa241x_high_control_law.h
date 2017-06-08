@@ -62,7 +62,7 @@ bool going_straight() ;
 void low_loop();
 
 bool autopilot_is_off();
-
+/*
 struct target_s {
     float lat;
     float pos_N;
@@ -72,7 +72,7 @@ struct target_s {
     bool turnLeft;
     float yaw;
 };
-
+*/
 extern std::vector<target_s> target_list;
 //target_list.reserve(5);
 extern bool new_targets;

@@ -96,14 +96,15 @@ struct target_s {
     float pos_E;
     float radius;
     bool turnLeft;
-    float heading_desired;
+    float yaw;
 };
+/*
 extern std::vector<target_s> target_list;
 
 extern bool new_targets;
 extern int target_idx;
 extern bool run_path_planner;
-
+*/
 std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<float> tgt_y_list, float in_x, float in_y, \
                                float in_v_x, float in_v_y) ;
 void low_loop();

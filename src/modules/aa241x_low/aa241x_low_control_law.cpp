@@ -191,11 +191,12 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
     targets_to_output.reserve(N);
     for (int i = 0; i<N; i++) {
         target_s temp_target;
-        temp_target.heading_desired = best_headings[i];
+        temp_target.yaw = best_headings[i];
         temp_target.turnLeft = best_turn_left[i];
         temp_target.pos_E = tgt_x_list[best_order[i]];
         temp_target.pos_N = tgt_y_list[best_order[i]];
-        temp_target.radius = plume_radius[best_order[i]];
+        temp_target.radius = 2.5f;
+        //temp_target.radius = plume_radius[best_order[i]];
         targets_to_output.push_back(temp_target);
 //        std::cout << "Heading " << i << ": " << best_headings[i] << "\n";
 //        std::cout << "Turn Left " << i << ": " << best_turn_left[i] << "\n";
@@ -224,19 +225,19 @@ void low_loop()
         target_s target2;
         target_s target3;
 
-        target1.heading_desired = 0.0;
+        target1.yaw = 0.0;
         target1.turnLeft = true;
         target1.pos_E = 0.0f; //CHANGE THIS!
         target1.pos_N = 0.0f; //CHANGE THIS!
         target_list.push_back(target1);
 
-        target2.heading_desired = 1.5;
+        target2.yaw = 1.5;
         target2.turnLeft = true;
         target2.pos_E = 10.0f; //CHANGE THIS!
         target2.pos_N = 10.0f; //CHANGE THIS!
         target_list.push_back(target2);
 
-        target3.heading_desired = -1.5;
+        target3.yaw = -1.5;
         target3.turnLeft = true;
         target3.pos_E = 10.0f; //CHANGE THIS!
         target3.pos_N = 10.0f; //CHANGE THIS!
@@ -297,6 +298,7 @@ void low_loop()
         target_list = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
                                    in_v_x, in_v_y);
         new_targets = true;
+        first_run = false;
     }
 
 	// getting high data value example
