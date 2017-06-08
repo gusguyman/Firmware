@@ -211,7 +211,9 @@ void flight_control() {
         rollForHeading_desired = roll;
         mazController.SetPosInit(position_N, position_E);
         first_run = true;
-         							// yaw_desired already defined in aa241x_high_aux.h
+        new_targets = false;
+        //run_path_planner = true;
+		// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
     }
 
@@ -304,6 +306,20 @@ void flight_control() {
     mazController.GetLogData(data_to_log);
     data_to_log.field5 = speed_body_u;
     data_to_log.field16 = target_idx;
+    data_to_log.field15 = new_targets;
+/*
+    if(run_path_planner) {
+        yaw_servo_out = 1.0f;
+        pitch_servo_out = -1.0f; // Negative for preferred control inversion
+        roll_servo_out = 1.0f;
+        throttle_servo_out = 0.0f;
+    } else {
+        yaw_servo_out = -1.0f;
+        pitch_servo_out = 1.0f; // Negative for preferred control inversion
+        roll_servo_out = -1.0f;
+        throttle_servo_out = 0.0f;
+    }
+*/
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;

@@ -119,7 +119,8 @@
 
 # Warning: Changing this modifies CMake's internal workings
 # and leads to wrong toolchain detection
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+set (CMAKE_CXX_STANDARD 11)
 
 set(PX4_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(PX4_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")

@@ -61,6 +61,10 @@
 #include <vector>
 #include <numeric>
 #include <algorithm>
+//#include <iterator>
+//#include <iostream>
+#include <cmath>
+//#include <iterator>
 /*
  * Declare variables here that you may want to access
  * in multiple different function.
@@ -69,6 +73,7 @@
 /*
  * Declare function prototypes here.
  */
+
 
 // struct target_s {
 //     float lat;
@@ -84,7 +89,22 @@
 // extern bool new_targets;
 // extern int target_idx;
 
-/*std::vector<target_s> order_targets(std::vector<float> tgt_lats, std::vector<float> tgt_lons, float lat_start, float lon_start, \
-                               float lat_v, float lon_v);
-*/
+struct target_s {
+    float lat;
+    float pos_N;
+    float lon;
+    float pos_E;
+    float radius;
+    bool turnLeft;
+    float heading_desired;
+};
+extern std::vector<target_s> target_list;
+
+extern bool new_targets;
+extern int target_idx;
+extern bool run_path_planner;
+
+std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<float> tgt_y_list, float in_x, float in_y, \
+                               float in_v_x, float in_v_y) ;
+void low_loop();
 #endif /* AA241X_SLOW_H_ */
