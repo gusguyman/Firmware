@@ -213,7 +213,8 @@ void flight_control() {
                              );
 
     mazController.GetLogData(data_to_log);
-
+    data_to_log.field15 = new_targets;
+/*
     if(run_path_planner) {
         yaw_servo_out = 1.0f;
         pitch_servo_out = -1.0f; // Negative for preferred control inversion
@@ -225,7 +226,7 @@ void flight_control() {
         roll_servo_out = -1.0f;
         throttle_servo_out = 0.0f;
     }
-
+*/
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;

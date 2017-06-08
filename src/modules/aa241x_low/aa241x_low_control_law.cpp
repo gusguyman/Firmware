@@ -259,7 +259,7 @@ void low_loop()
         run_path_planner = false;
     }*/
 
-    if (prev_phase != phase_num) { //New targets available
+    if (in_mission && prev_phase != phase_num) { //New targets available
         int j = 0;
         std::vector<float> tgt_y_list;
         std::vector<float> tgt_x_list;
