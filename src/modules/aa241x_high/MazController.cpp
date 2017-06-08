@@ -567,7 +567,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         if (in_roll.current > -0.7f) {
             r_outputs.pitch = 0.0f;
         } else {
-            r_outputs.pitch = -0.75*std::min(1.0f, -in_roll.current / 1.047f);
+            r_outputs.pitch = -0.75f*std::min(1.0f, -in_roll.current / 1.047f);
         }
         //r_outputs.pitch = -1.0f;
         r_outputs.yaw = -0.20f;
@@ -593,7 +593,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         if (in_roll.current < 0.7f) {
             r_outputs.pitch = 0.0f;
         } else {
-            r_outputs.pitch = -0.75*std::min(1.0f, in_roll.current / 1.047f);
+            r_outputs.pitch = -0.75f*std::min(1.0f, in_roll.current / 1.047f);
         }
         r_outputs.yaw = 0.20f;
         break;
