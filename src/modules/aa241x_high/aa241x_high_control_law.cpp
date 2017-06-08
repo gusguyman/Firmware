@@ -302,6 +302,7 @@ void flight_control() {
                              );
 
     mazController.GetLogData(data_to_log);
+    data_to_log.field5 = speed_body_u;
     data_to_log.field16 = target_idx;
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion

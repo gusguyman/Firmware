@@ -564,8 +564,12 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-
-        r_outputs.pitch = -1.0f;
+        if (in_roll.current > -0.5f;) {
+            r_outputs.pitch = 0.0f;
+        } else {
+            r_outputs.pitch = -std::min(1.0f, in_roll.current / 1.047f);
+        }
+        //r_outputs.pitch = -1.0f;
         r_outputs.yaw = -0.25f;
         break;
     case 13: // anyone superstitious?
@@ -586,7 +590,11 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        r_outputs.pitch = -1.0f;
+        if (in_roll.current < 0.5f;) {
+            r_outputs.pitch = 0.0f;
+        } else {
+            r_outputs.pitch = -std::min(1.0f, in_roll.current / 1.047f);
+        }
         r_outputs.yaw = 0.25f;
         break;
     case 15: // follow line
@@ -633,7 +641,10 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         } else {
             current = in_alt.current;
         }
-        _Alt.SetDesired(-240.0f);
+        if (std::fabs(in_alt.desired - in_alt.current) > 10.00) {
+            r_outputs.throttle = 1.0f;
+        }
+        _Alt.SetDesired(in_alt.desired);
         _Alt.SetCurrentValue(current);
         _Alt.PID_Update();
 
