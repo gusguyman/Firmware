@@ -189,6 +189,10 @@ void flight_control() {
 
 	    first_run = false;
 	    new_targets = true;
+	    target_idx = 1;
+        mazController.SetPosInit(position_N, position_E);
+        mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
+        mazController.SetYaw(target_list[target_idx].pos_E, target_list[target_idx].pos_N, position_E, position_N);
 	}
     if (hrt_absolute_time() - previous_loop_timestamp > 500000.0f) { // Run if more than 0.5 seconds have passes since last loop,
                                                                  //	should only occur on first engagement since this is 59Hz loop
@@ -294,7 +298,7 @@ void flight_control() {
                     current_command = 1;
                 } else {
                     mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
-                    target_yaw = target_list[target_idx].yaw;
+                    mazController.SetYaw(target_list[target_idx].pos_E, target_list[target_idx].pos_N, position_E, position_N);
                 }
             } else {
                 mazController.SetPos(position_N, position_E);
