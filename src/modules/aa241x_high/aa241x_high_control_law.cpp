@@ -170,21 +170,21 @@ void flight_control() {
         target1.yaw = 0.0f;
 	    target1.turnLeft = true;
         target1.pos_E = position_E;
-        target1.pos_N = position_N + 50.0f;
-        target1.radius = 10.0f;
+        target1.pos_N = position_N + 7.0f;
+        target1.radius = 2.5f;
 	    target_list.push_back(target1);
 
 	    target2.turnLeft = true;
-        target2.pos_E = position_E - 50.0f;
-        target2.pos_N = position_N + 50.0f;
-        target2.radius = 10.0f;
+        target2.pos_E = position_E - 7.0f;
+        target2.pos_N = position_N + 7.0f;
+        target2.radius = 2.5f;
 	    target_list.push_back(target2);
 
         target3.yaw = -2.5f;
 	    target3.turnLeft = true;
         target3.pos_E = position_E;
         target3.pos_N = position_N;
-        target3.radius = 10.0f;
+        target3.radius = 2.5f;
 	    target_list.push_back(target3);
 
 	    first_run = false;
@@ -300,6 +300,6 @@ void flight_control() {
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
-    throttle_servo_out = outputs.throttle;
+    throttle_servo_out = outputs.throttle/10;
 
 }
