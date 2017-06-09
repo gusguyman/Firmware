@@ -298,6 +298,28 @@ void flight_control() {
     }
     if (autopilot_is_off()) {
         flight_mode = aah_parameters.flight_mode;
+        if (flight_mode == 15) {
+            mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
+            if (straight_is_complete(target_list[target_idx].radius)) {
+                target_idx ++;
+                if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
+                    yaw_desired = yaw;
+                    roll_desired = 0;
+                    pitch_desired = -1.0f;
+                    velocity_desired = 15.0f;
+                    altitude_desired = position_D_gps;
+                    current_command = 1;
+                } else {
+                    mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
+                    mazController.SetYaw(target_list[target_idx].pos_E, target_list[target_idx].pos_N, position_E, position_N);
+                }
+            } else {
+                mazController.SetPos(position_N, position_E);
+            }
+        }
+    }
+    if (first_run) {
+            flight_mode = 3;
     }
 
     UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
@@ -334,11 +356,12 @@ void flight_control() {
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
     throttle_servo_out = outputs.throttle;
+    /*
     if (first_run) {
         yaw_servo_out = -1.0f;
         pitch_servo_out = -1.0f; // Negative for preferred control inversion
         roll_servo_out = -1.0f;
         throttle_servo_out = 0.0f;
     }
-
+*/
 }

@@ -261,7 +261,7 @@ void low_loop()
         new_targets = true;
         run_path_planner = false;
     }*/
-/*
+
     if (in_mission && prev_phase != phase_num) { //New targets available
         int j = 0;
         std::vector<float> tgt_y_list;
@@ -279,7 +279,7 @@ void low_loop()
                                    in_v_x, in_v_y);
         new_targets = true;
     }
-    */
+    /*
     float test_N[3] = {position_N, position_N+50.0f, position_N-50.0f};
     float test_E[3] = {position_E+50.0f, position_E, position_E-50.0f};
     if (first_run) { //New targets available
@@ -300,7 +300,7 @@ void low_loop()
         new_targets = true;
         first_run = false;
     }
-
+*/
 	// getting high data value example
 	// float my_high_data = high_data.field1;
 
