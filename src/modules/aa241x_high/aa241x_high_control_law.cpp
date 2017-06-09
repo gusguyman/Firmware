@@ -167,34 +167,24 @@ void flight_control() {
         target0.radius = 2.5f;
 	    target_list.push_back(target0);
 
-	    //target1.yaw = 0.5f;
-	    //target1.pos_E = 1944.0f; //Known point in Coyote Hill
-	    //target1.pos_N = -2400.0f; //Known point in Coyote Hill
         target1.yaw = 0.0f;
 	    target1.turnLeft = true;
         target1.pos_E = position_E;
-        target1.pos_N = position_N + 7.0f;
-        target1.radius = 2.5f;
+        target1.pos_N = position_N + 50.0f;
+        target1.radius = 10.0f;
 	    target_list.push_back(target1);
 
-	    //target2.yaw = 0.0f;
-	    //target2.pos_E = 1944.0f; //Known point in Coyote Hill
-	    //target2.pos_N = -2200.0f; //Known point in Coyote Hill
-        target2.yaw = 0.57f;
 	    target2.turnLeft = true;
-        target2.pos_E = position_E - 7.0f;
-        target2.pos_N = position_N + 7.0f;
-        target2.radius = 2.5f;
+        target2.pos_E = position_E - 50.0f;
+        target2.pos_N = position_N + 50.0f;
+        target2.radius = 10.0f;
 	    target_list.push_back(target2);
 
-	    //target3.yaw = 0.785;
-	    //target3.pos_E = 1800.0f; //Known point in Coyote Hill
-	    //target3.pos_N = -2200.0f; //Known point in Coyote Hill
         target3.yaw = -2.5f;
 	    target3.turnLeft = true;
         target3.pos_E = position_E;
         target3.pos_N = position_N;
-        target3.radius = 2.5f;
+        target3.radius = 10.0f;
 	    target_list.push_back(target3);
 
 	    first_run = false;
@@ -211,6 +201,7 @@ void flight_control() {
         rollForHeading_desired = roll;
         mazController.SetPosInit(position_N, position_E);
         first_run = true;
+        target_idx = 1;
          							// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
     }
@@ -264,9 +255,11 @@ void flight_control() {
             } else {
                 mazController.SetPos(position_N, position_E);
                 //Test if we missed target
+                /*
                 if ( (position_N - target_list[target_idx].pos_N)*(target_list[target_idx].pos_N - target_list[target_idx-1].pos_N) + \
                      (position_E - target_list[target_idx].pos_E)*(target_list[target_idx].pos_E - target_list[target_idx-1].pos_E)  > 0.0f ) { //we missed target, skip it
-                	target_idx ++;
+                	*/
+                    // target_idx ++;
                 	if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
                     	yaw_desired = yaw;
                     	roll_desired = 0;
@@ -281,7 +274,7 @@ void flight_control() {
                     	target_yaw = target_list[target_idx].yaw;
                     	current_command = 0;
                     }
-                }
+                //}
             }
         }
     }
