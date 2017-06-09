@@ -274,7 +274,7 @@ void flight_control() {
                 if ( (position_N - target_list[target_idx].pos_N)*(target_list[target_idx].pos_N - target_list[target_idx-1].pos_N) + \
                      (position_E - target_list[target_idx].pos_E)*(target_list[target_idx].pos_E - target_list[target_idx-1].pos_E)  > 0.0f ) { //we missed target, skip it
                 	target_idx ++;
-                	*/
+
                 	if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
                     	yaw_desired = yaw;
                     	roll_desired = 0;
@@ -289,7 +289,8 @@ void flight_control() {
                     	target_yaw = target_list[target_idx].yaw;
                     	current_command = 0;
                     }
-                //}
+                }
+                */
             }
         }
     } else {

@@ -82,7 +82,7 @@ float MazController::Dist_to_line(){
     float b = _prev_goal_E - _goal_E;
     float c = -a*_goal_E-b*_goal_N;
 
-    float perp_d = (a*_cur_E+b*_cur_N+c)/sqrtf(pow(a,2.0f)+pow(b,2.0f));
+    float perp_d = -(a*_cur_E+b*_cur_N+c)/sqrtf(pow(a,2.0f)+pow(b,2.0f));
 
     return perp_d;
 
@@ -564,13 +564,13 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        if (in_roll.current > -0.5f) {
+        if (in_roll.current > -0.7f) {
             r_outputs.pitch = 0.0f;
         } else {
-            r_outputs.pitch = 0.75f * std::min(1.0f, in_roll.current / 1.047f);
+            r_outputs.pitch = -0.5f*std::min(1.0f, -in_roll.current / 1.047f);
         }
         //r_outputs.pitch = -1.0f;
-        r_outputs.yaw = -0.15f;
+        r_outputs.yaw = 0.25f;
         break;
     case 13: // anyone superstitious?
         break;
@@ -590,12 +590,12 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _Vel.PID_Update();
         r_outputs.throttle = _Vel.GetOutput();
         _data_to_log.field5 = in_vel.desired;
-        if (in_roll.current < 0.5f) {
+        if (in_roll.current < 0.7f) {
             r_outputs.pitch = 0.0f;
         } else {
-            r_outputs.pitch = 0.75f * std::min(1.0f, in_roll.current / 1.047f);
+            r_outputs.pitch = -0.5f*std::min(1.0f, in_roll.current / 1.047f);
         }
-        r_outputs.yaw = 0.15f;
+        r_outputs.yaw = -0.25f;
         break;
     case 15: // follow line
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
@@ -634,7 +634,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
 
 
         _Alt.SetGains(in_alt.kp, in_alt.kd, in_alt.ki);
-        _Alt.SetBounds(-0.5f, 0.5f);
+        _Alt.SetBounds(-0.25f, 0.25f);
 
         if (std::fabs(in_alt.desired - in_alt.current) < 1.00) {
             current = in_alt.desired;
@@ -662,4 +662,3 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         break;
     }
 }
-
