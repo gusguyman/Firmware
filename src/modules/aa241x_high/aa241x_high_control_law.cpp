@@ -258,7 +258,7 @@ void flight_control() {
                 /*
                 if ( (position_N - target_list[target_idx].pos_N)*(target_list[target_idx].pos_N - target_list[target_idx-1].pos_N) + \
                      (position_E - target_list[target_idx].pos_E)*(target_list[target_idx].pos_E - target_list[target_idx-1].pos_E)  > 0.0f ) { //we missed target, skip it
-                	*/
+
                     // target_idx ++;
                 	//if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
                     //	yaw_desired = yaw;
@@ -275,6 +275,7 @@ void flight_control() {
                     //	current_command = 0;
                     //}
                 //}
+                */
             }
         }
     }
@@ -300,6 +301,6 @@ void flight_control() {
     yaw_servo_out = outputs.yaw;
     pitch_servo_out = -outputs.pitch; // Negative for preferred control inversion
     roll_servo_out = outputs.roll;
-    throttle_servo_out = outputs.throttle/10;
+    throttle_servo_out = outputs.throttle/100;
 
 }
