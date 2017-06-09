@@ -82,7 +82,7 @@ float MazController::Dist_to_line(){
     float b = _prev_goal_E - _goal_E;
     float c = -a*_goal_E-b*_goal_N;
 
-    float perp_d = (a*_cur_E+b*_cur_N+c)/sqrtf(pow(a,2.0f)+pow(b,2.0f));
+    float perp_d = -(a*_cur_E+b*_cur_N+c)/sqrtf(pow(a,2.0f)+pow(b,2.0f));
 
     return perp_d;
 

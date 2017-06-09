@@ -260,20 +260,20 @@ void flight_control() {
                      (position_E - target_list[target_idx].pos_E)*(target_list[target_idx].pos_E - target_list[target_idx-1].pos_E)  > 0.0f ) { //we missed target, skip it
                 	*/
                     // target_idx ++;
-                	if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
-                    	yaw_desired = yaw;
-                    	roll_desired = 0;
-                    	pitch_desired = 0;
-                    	velocity_desired = 15.0f;
-                    	altitude_desired = position_D_gps;
-                    	current_command = 1;
-                    } else {
-                    	flight_mode = target_list[target_idx].turnLeft ? \
+                	//if (target_idx > target_list.size()) { // Out of targets, hold course until new targets
+                    //	yaw_desired = yaw;
+                    //	roll_desired = 0;
+                    //	pitch_desired = 0;
+                    //	velocity_desired = 15.0f;
+                    //	altitude_desired = position_D_gps;
+                    //	current_command = 1;
+                    //} else {
+                    //	flight_mode = target_list[target_idx].turnLeft ? \
                         	mazController.turn_left() : \
                         	mazController.turn_right();
-                    	target_yaw = target_list[target_idx].yaw;
-                    	current_command = 0;
-                    }
+                    //	target_yaw = target_list[target_idx].yaw;
+                    //	current_command = 0;
+                    //}
                 //}
             }
         }
