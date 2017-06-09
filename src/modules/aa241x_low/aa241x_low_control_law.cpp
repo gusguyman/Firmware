@@ -213,7 +213,7 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
 }
 
 
-int32_t prev_phase = phase_num;
+int32_t prev_phase = phase_num - 1;
 bool first_run = true;
 void low_loop()
 {
@@ -278,7 +278,26 @@ void low_loop()
         target_list = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
                                    in_v_x, in_v_y);
         new_targets = true;
+        prev_phase = phase_num;
     }
+    
+    /*
+    if (in_mission && prev_phase != phase_num) { //New targets available
+        int j = 0;
+        std::vector<float> tgt_y_list;
+        std::vector<float> tgt_x_list;
+        while((int)std::ceil(std::abs(plume_N[j])) != 0) {
+            target_s target1;
+            target1.yaw = 0.0;
+            target1.turnLeft = true;
+            target1.pos_E = plume_E[j]; //CHANGE THIS!
+            target1.pos_N = plume_N[j]; //CHANGE THIS!
+            target_list.push_back(target1);
+            j++;
+        }
+        
+    }
+    */
     /*
     float test_N[3] = {position_N, position_N+50.0f, position_N-50.0f};
     float test_E[3] = {position_E+50.0f, position_E, position_E-50.0f};

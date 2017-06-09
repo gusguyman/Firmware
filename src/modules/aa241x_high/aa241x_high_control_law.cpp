@@ -213,8 +213,8 @@ void flight_control() {
         altitude_desired = aah_parameters.altitude_desired;
         rollForHeading_desired = roll;
         mazController.SetPosInit(position_N, position_E);
-        first_run = true;
-        new_targets = false;
+        //first_run = true;
+        //new_targets = false;
         //run_path_planner = true;
 		// yaw_desired already defined in aa241x_high_aux.h
 //    altitude_desired = position_D_baro; 		// altitude_desired needs to be declared outside flight_control() function
@@ -237,6 +237,7 @@ void flight_control() {
             mazController.turn_left() : \
             mazController.turn_right();
         target_yaw = target_list[target_idx].yaw;
+        first_run = false;
 
     } else if (!first_run) {
         if (turning()) {
@@ -319,7 +320,7 @@ void flight_control() {
         }
     }
     if (first_run) {
-            flight_mode = 3;
+            flight_mode = 0;
     }
 
     UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);
