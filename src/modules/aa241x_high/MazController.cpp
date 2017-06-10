@@ -79,7 +79,7 @@ float MazController::Dist_to_line(){
     // Coefficients of the equation of the line
 
     float a = _goal_N - _prev_goal_N;
-    float b = _prev_goal_E - _goal_E;
+    float b = -(_goal_E - _prev_goal_E);
     float c = -a*_goal_E-b*_goal_N;
 
     float perp_d = -(a*_cur_E+b*_cur_N+c)/sqrtf(pow(a,2.0f)+pow(b,2.0f));
@@ -117,7 +117,7 @@ float MazController::wrapToPi(float angle) {
 }
 
 void MazController::SetYaw(float target_posE, float target_posN, float posE, float posN) {
-	_yaw_target = wrapToPi(atan2f(target_posE - posE),(target_posN - posN));
+	_yaw_target = wrapToPi(atan2f(target_posE - posE,(target_posN - posN)));
 }
 
 void MazController::Controller(int flight_mode, output_s & r_outputs, \
