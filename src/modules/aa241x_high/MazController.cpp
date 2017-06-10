@@ -619,7 +619,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(0.7f*atanf(_Heading.GetOutput()) + _yaw_target);
+        _Yaw.SetDesired(_yaw_target - 0.7f*atanf(_Heading.GetOutput()));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
