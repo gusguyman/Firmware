@@ -195,7 +195,7 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
         temp_target.turnLeft = best_turn_left[i];
         temp_target.pos_E = tgt_x_list[best_order[i]];
         temp_target.pos_N = tgt_y_list[best_order[i]];
-        temp_target.radius = 10.0f;
+        temp_target.radius = 2.5f;
         //temp_target.radius = plume_radius[best_order[i]];
         targets_to_output.push_back(temp_target);
 //        std::cout << "Heading " << i << ": " << best_headings[i] << "\n";
@@ -259,9 +259,9 @@ void low_loop()
         targets = order_targets(tgt_x_list, tgt_y_list, in_x, in_y, \
                                    in_v_x, in_v_y);
         new_targets = true;
-        run_path_planner = false;
+        run_path_planner = false;. 
     }*/
-
+/*
     if (in_mission && prev_phase != phase_num) { //New targets available
         int j = 0;
         std::vector<float> tgt_y_list;
@@ -280,7 +280,7 @@ void low_loop()
         new_targets = true;
         prev_phase = phase_num;
     }
-    
+  */  
     /*
     if (in_mission && prev_phase != phase_num) { //New targets available
         int j = 0;
@@ -298,9 +298,9 @@ void low_loop()
         
     }
     */
-    /*
-    float test_N[3] = {position_N, position_N+50.0f, position_N-50.0f};
-    float test_E[3] = {position_E+50.0f, position_E, position_E-50.0f};
+    
+    float test_N[4] = {position_N, position_N+7.0f, position_N-7.0f, 0.0f};
+    float test_E[4] = {position_E+7.0f, position_E, position_E-7.0f, 0.0f};
     if (first_run) { //New targets available
         int j = 0;
         std::vector<float> tgt_y_list;
@@ -319,7 +319,7 @@ void low_loop()
         new_targets = true;
         first_run = false;
     }
-*/
+
 	// getting high data value example
 	// float my_high_data = high_data.field1;
 

@@ -310,6 +310,7 @@ void flight_control() {
                     velocity_desired = 15.0f;
                     altitude_desired = position_D_gps;
                     current_command = 1;
+                    first_run = true;
                 } else {
                     mazController.SetGoal(target_list[target_idx].pos_N, target_list[target_idx].pos_E);
                     mazController.SetYaw(target_list[target_idx].pos_E, target_list[target_idx].pos_N, position_E, position_N);
@@ -320,7 +321,7 @@ void flight_control() {
         }
     }
     if (first_run) {
-            flight_mode = 0;
+            flight_mode = 12;
     }
 
     UpdateInputs(roll_s, pitch_s, yaw_s, vel_s, alt_s, heading_s, rollForHeading_s);

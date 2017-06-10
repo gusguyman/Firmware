@@ -423,11 +423,11 @@ void AA241xMission::check_field_bounds()
 			        mavlink_log_critical(_mavlink_fd, "AA241x mission failed, out of bounds");
 				_out_of_bounds = true;
 			}
-<<<<<<< HEAD
+
 			//UNCOMMENT THIS LATER - I turned off boundary checks for ground testing
-		        //_mission_failed = true;
-			//_in_mission = false;
-=======
+		        _mission_failed = true;
+			_in_mission = false;
+
 		    }
 		}
         	*/
@@ -483,9 +483,8 @@ void AA241xMission::check_field_bounds()
 		        if (!_out_of_bounds) {
 			        mavlink_log_critical(&_mavlink_log_pub, "Out of bounds at %5.1f E, %5.1f N; mission failed",(double)_cur_pos.E,(double)_cur_pos.N);
 				_out_of_bounds = true;
-			}
+				}
 		    }
->>>>>>> b84a27c44ded8359b997628508a0090a5078e059
 		}
 
 	}

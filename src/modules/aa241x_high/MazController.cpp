@@ -567,10 +567,10 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         if (in_roll.current > -0.7f) {
             r_outputs.pitch = 0.0f;
         } else {
-            r_outputs.pitch = -0.5f*std::min(1.0f, -in_roll.current / 1.047f);
+            r_outputs.pitch = 0.5f*std::min(1.0f, -in_roll.current / 1.047f);
         }
         //r_outputs.pitch = -1.0f;
-        r_outputs.yaw = 0.25f;
+        r_outputs.yaw = 0.0f;
         break;
     case 13: // anyone superstitious?
         break;
@@ -593,9 +593,9 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         if (in_roll.current < 0.7f) {
             r_outputs.pitch = 0.0f;
         } else {
-            r_outputs.pitch = -0.5f*std::min(1.0f, in_roll.current / 1.047f);
+            r_outputs.pitch = 0.5f*std::min(1.0f, in_roll.current / 1.047f);
         }
-        r_outputs.yaw = -0.25f;
+        r_outputs.yaw = 0.0f;
         break;
     case 15: // follow line
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
