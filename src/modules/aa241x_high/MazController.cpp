@@ -597,7 +597,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         }
         r_outputs.yaw = 0.0f;
         break;
-    case 15: // follow line
+    case 15:{ // follow line
         _Vel.SetGains(in_vel.kp, in_vel.kd, in_vel.ki);
         _Vel.SetDesired(15.0f);
         _Vel.SetCurrentValue(in_vel.current);
@@ -619,8 +619,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        float _yaw_command = wrapToPi(_yaw_target-in_yaw.current);
-        _Yaw.SetDesired(_yaw_command - 0.7f*atanf(_Heading.GetOutput()));
+        _Yaw.SetDesired(wrapToPi(_yaw_target-in_yaw.current)- 0.7f*atanf(_Heading.GetOutput()));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
@@ -658,6 +657,7 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field6 = in_alt.desired;
         _data_to_log.field7 = _Alt.GetOutput();
         break;
+        }
     default:
         //Do nothing, return all manual inputs
         break;
