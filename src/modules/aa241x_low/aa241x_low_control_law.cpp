@@ -188,8 +188,16 @@ std::vector<target_s> order_targets(std::vector<float> tgt_x_list, std::vector<f
 
     } while (std::next_permutation(std::begin(idxs), std::end(idxs))) ;
     std::vector<target_s> targets_to_output;
-    targets_to_output.reserve(N);
-    for (int i = 0; i<N; i++) {
+    targets_to_output.reserve(N+1);
+    target_s temp_target0;
+    temp_target0.yaw = yaw;
+    temp_target0.turnLeft = true;
+    temp_target0.pos_E = position_E;
+    temp_target0.pos_N = position_N;
+    temp_target0.radius = 2.5f;
+    //temp_target.radius = plume_radius[best_order[i]];
+    targets_to_output.push_back(temp_target0);
+    for (int i = 1; i<=N; i++) {
         target_s temp_target;
         temp_target.yaw = best_headings[i];
         temp_target.turnLeft = best_turn_left[i];
@@ -261,7 +269,8 @@ void low_loop()
         new_targets = true;
         run_path_planner = false;. 
     }*/
-
+//This is the mission tqrget code
+    /*
     if (in_mission && prev_phase != phase_num) { //New targets available
         int j = 0;
         std::vector<float> tgt_y_list;
@@ -280,7 +289,7 @@ void low_loop()
         new_targets = true;
         prev_phase = phase_num;
     }
-   
+   */
     /*
     if (in_mission && prev_phase != phase_num) { //New targets available
         int j = 0;
@@ -298,9 +307,9 @@ void low_loop()
         
     }
     */
-    /*
-    float test_N[4] = {position_N, position_N+7.0f, position_N-7.0f, 0.0f};
-    float test_E[4] = {position_E+7.0f, position_E, position_E-7.0f, 0.0f};
+    
+    float test_N[4] = {position_N - 7.0f, 0.0f, position_N-7.0f, position_N+7.0f};
+    float test_E[4] = {position_E, 0.0f, position_E, position_E-7.0f};
     if (first_run) { //New targets available
         int j = 0;
         std::vector<float> tgt_y_list;
@@ -319,7 +328,8 @@ void low_loop()
         new_targets = true;
         first_run = false;
     }
-    */
+
+    
 
 	// getting high data value example
 	// float my_high_data = high_data.field1;
