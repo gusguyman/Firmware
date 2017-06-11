@@ -117,7 +117,7 @@ float MazController::wrapToPi(float angle) {
 }
 
 void MazController::SetYaw(float target_posE, float target_posN, float posE, float posN) {
-	_yaw_target = wrapToPi(atan2f(target_posE - posE,(target_posN - posN)));
+	_yaw_target = atan2f(target_posE - posE,(target_posN - posN));
 }
 
 void MazController::Controller(int flight_mode, output_s & r_outputs, \
@@ -619,7 +619,8 @@ void MazController::Controller(int flight_mode, output_s & r_outputs, \
         _data_to_log.field14 = _prev_E;
 
         _Yaw.SetGains(in_yaw.kp, in_yaw.kd, in_yaw.ki);
-        _Yaw.SetDesired(_yaw_target - 0.7f*atanf(_Heading.GetOutput()));
+        float _yaw_command = wrapToPi(_yaw_target-in_yaw.current);
+        _Yaw.SetDesired(_yaw_command - 0.7f*atanf(_Heading.GetOutput()));
         _Yaw.SetCurrentValue(in_yaw.current);
         _Yaw.PID_Update();
         r_outputs.yaw = _Yaw.GetOutput();
